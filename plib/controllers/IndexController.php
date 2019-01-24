@@ -29,7 +29,10 @@ class IndexController extends pm_Controller_Action
         )
     );
 
-    $this->cloudflare = new Cloudflare(pm_Settings::getDecrypted('cloudflareEmail'), pm_Settings::getDecrypted('cloudflareApiKey'));
+    $this->cloudflare = new Cloudflare(
+        pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_EMAIL)),
+        pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_API_KEY))
+    );
   }
 
   public function indexAction()
@@ -48,17 +51,17 @@ class IndexController extends pm_Controller_Action
   {
     //Create a new Form
     $form = new pm_Form_Simple();
-    $form->addElement('Text', 'cloudflareEmail', array(
+    $form->addElement('Text', SettingsUtil::CLOUDFLARE_EMAIL, array(
         'label' => 'Cloudflare Email',
-        'value' => pm_Settings::getDecrypted('cloudflareEmail'),
+        'value' => pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_EMAIL)),
         'required' => true,
         'validator' => array(
             array('EmailAddress', true)
         )
     ));
-    $form->addElement('Text', 'cloudflareApiKey', array(
+    $form->addElement('Text', SettingsUtil::CLOUDFLARE_API_KEY, array(
         'label' => 'Cloudflare API Key',
-        'value' => pm_Settings::getDecrypted('cloudflareApiKey'),
+        'value' => pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_API_KEY)),
         'required' => true,
         'validator' => array(
             array('NotEmpty', true)
@@ -70,8 +73,8 @@ class IndexController extends pm_Controller_Action
     ));
 
     if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
-      pm_Settings::setEncrypted('cloudflareEmail', $form->getValue('cloudflareEmail'));
-      pm_Settings::setEncrypted('cloudflareApiKey', $form->getValue('cloudflareApiKey'));
+      pm_Settings::setEncrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_EMAIL), $form->getValue(SettingsUtil::CLOUDFLARE_EMAIL));
+      pm_Settings::setEncrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_API_KEY), $form->getValue(SettingsUtil::CLOUDFLARE_API_KEY));
 
       $this->_status->addMessage('info', 'Data was successfully saved.');
       $this->_helper->json(array('redirect' => pm_Context::getBaseUrl()));
