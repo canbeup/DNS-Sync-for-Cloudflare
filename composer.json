@@ -1,5 +1,26 @@
 {
+  "config": {
+    "vendor-dir": "plib/vendor"
+  },
+  "autoload":{
+    "psr-0": {
+      "Composer_": [
+        "modules/cloudflare_dns_sync/library/",
+        "plib/library/"
+      ]
+    },
+    "psr-4": {
+        "PleskExt\\Composer\\": [
+            "modules/cloudflare_dns_sync/library/Composer/",
+            "plib/library/Composer/"
+        ]
+    }
+  },
   "require-dev": {
     "plesk/pm-api-stubs": "^17.0"
+  },
+  "require": {
+    "cloudflare/sdk": "^1.1",
+    "plesk/api-php-lib": "^1.0"
   }
 }
