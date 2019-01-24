@@ -1,1 +1,0 @@
-<?php echo $this->renderTabs($this->tabs); ?>
