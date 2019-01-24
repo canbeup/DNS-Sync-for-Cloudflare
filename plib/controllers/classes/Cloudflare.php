@@ -12,4 +12,12 @@ class Cloudflare
     $this->adapter = new Cloudflare\API\Adapter\Guzzle($key);
   }
 
+  /**
+   * @return Zones
+   */
+  public function getZones()
+  {
+    return new Zones($this->adapter);
+  }
+
 }
