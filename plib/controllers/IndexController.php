@@ -2,11 +2,12 @@
 
 require 'classes/Cloudflare.php';
 require 'classes/PleskDNS.php';
+require 'classes/SettingsUtil.php';
 
 class IndexController extends pm_Controller_Action
 {
   /**
-   * @var $cloudflare Cloudflare
+   * @var $cloudflare Cloudflare|bool
    */
   private $cloudflare;
 
@@ -29,7 +30,7 @@ class IndexController extends pm_Controller_Action
         )
     );
 
-    $this->cloudflare = new Cloudflare(
+    $this->cloudflare = Cloudflare::login(
         pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_EMAIL)),
         pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_API_KEY))
     );
@@ -42,9 +43,13 @@ class IndexController extends pm_Controller_Action
 
   public function domainsAction()
   {
-    $list = $this->_getDomainList();
+    if ($this->cloudflare !== false) {
+      $list = $this->_getDomainList();
 
-    $this->view->list = $list;
+      $this->view->list = $list;
+    } else {
+      $this->view->error = "Could not connect to Cloudflare";
+    }
   }
 
   public function apiAction()

@@ -1,23 +1,45 @@
 <?php
 
+use Cloudflare\API\Adapter\Guzzle;
 use Cloudflare\API\Endpoints\Zones;
+use GuzzleHttp\Exception\ClientException;
 
 class Cloudflare
 {
   private $adapter;
 
-  public function __construct(string $email, string $apiKey)
+  private function __construct(Guzzle $adapter)
   {
-    $key = new Cloudflare\API\Auth\APIKey($email, $apiKey);
-    $this->adapter = new Cloudflare\API\Adapter\Guzzle($key);
+    $this->adapter = $adapter;
   }
 
   /**
-   * @return Zones
+   * @return bool|Zones
    */
   public function getZones()
   {
-    return new Zones($this->adapter);
+    try {
+      return new Zones($this->adapter);
+    } catch (ClientException $exception) {
+      return false;
+    }
+  }
+
+  /**
+   * @param $email
+   * @param $apiKey
+   * @return bool|Cloudflare
+   */
+  public static function login($email, $apiKey)
+  {
+    if ($email != null && $apiKey != null) {
+      $key = new Cloudflare\API\Auth\APIKey($email, $apiKey);
+      $adapter = new Cloudflare\API\Adapter\Guzzle($key);
+
+      return new Cloudflare($adapter);
+    } else {
+      return false;
+    }
   }
 
 }
