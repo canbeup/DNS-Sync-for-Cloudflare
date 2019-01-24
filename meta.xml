@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+  <id>cloudflare_dns_sync</id>
+  <name>Cloudflare DNS Sync</name>
+  <description>Sync your Plesk DNS with Cloudflare thru the Cloudflare API</description>
+  <version>1.0</version>
+  <release>1</release>
+  <vendor>Sander Jochems</vendor>
+  <url>https://www.sanderjochems.com/</url>
+  <plesk_min_version>17</plesk_min_version>
+</module>
