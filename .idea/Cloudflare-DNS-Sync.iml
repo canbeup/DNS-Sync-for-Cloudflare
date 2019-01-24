@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/plib/library/Composer" isTestSource="false" packagePrefix="PleskExt\Composer\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/cloudflare_dns_sync/library" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/plib/library" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/cloudflare_dns_sync/library/Composer" isTestSource="false" packagePrefix="PleskExt\Composer\" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
