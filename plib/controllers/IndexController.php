@@ -68,7 +68,7 @@ class IndexController extends pm_Controller_Action
         }
       }
       $data[] = array(
-          'col-id' => count((new PleskDNS())->getRecords($domain->getId())),
+          'col-id' => $domain->getId(),
           'col-domain' => $domain->getName(),
           'col-zone' => $cloudflareID,
       );
