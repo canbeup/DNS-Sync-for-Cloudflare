@@ -29,7 +29,7 @@ class IndexController extends pm_Controller_Action
         )
     );
 
-    $this->cloudflare = new Cloudflare('sanderjochems@hotmail.nl', '384c07aaa0b4b8827155d5de764bda2b3a9c5');
+    $this->cloudflare = new Cloudflare(pm_Settings::getDecrypted('cloudflareEmail'), pm_Settings::getDecrypted('cloudflareApiKey'));
   }
 
   public function indexAction()
