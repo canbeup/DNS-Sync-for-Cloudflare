@@ -8,3 +8,5 @@ composer.phar
 *.iws
 workspace.xml
 tasks.xml
+
+extension.zip
