@@ -2,6 +2,7 @@
 
 use Cloudflare\API\Adapter\Guzzle;
 use Cloudflare\API\Endpoints\Zones;
+use Cloudflare\API\Endpoints\User;
 use GuzzleHttp\Exception\ClientException;
 
 class Cloudflare
@@ -11,6 +12,17 @@ class Cloudflare
   private function __construct(Guzzle $adapter)
   {
     $this->adapter = $adapter;
+  }
+
+  /**
+   * @return bool|User
+   */
+  public function getUser() {
+    try {
+      return new User($this->adapter);
+    } catch (ClientException $exception) {
+      return false;
+    }
   }
 
   /**
