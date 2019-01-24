@@ -107,7 +107,6 @@ class IndexController extends pm_Controller_Action
         }
       }
       $data[] = array(
-          'col-id' => $domain->getId(),
           'col-domain' => $domain->getName(),
           'col-zone' => $cloudflareID,
       );
@@ -116,10 +115,6 @@ class IndexController extends pm_Controller_Action
     $list = new pm_View_List_Simple($this->view, $this->_request);
     $list->setData($data);
     $list->setColumns(array(
-        'col-id' => array(
-            'title' => 'ID',
-            'noEscape' => true,
-        ),
         'col-domain' => array(
             'title' => 'Domain',
             'noEscape' => true,
