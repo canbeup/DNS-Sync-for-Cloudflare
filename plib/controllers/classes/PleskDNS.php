@@ -14,4 +14,12 @@ class PleskDNS
     $this->client = new \PleskX\Api\InternalClient();
   }
 
+  /**
+   * @param $siteID
+   * @return Info[]
+   */
+  public function getRecords($siteID) {
+    return $this->client->dns()->getAll("site-id", $siteID);
+  }
+
 }
