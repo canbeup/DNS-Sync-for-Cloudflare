@@ -44,6 +44,42 @@ class IndexController extends pm_Controller_Action
     $this->view->list = $list;
   }
 
+  public function apiAction()
+  {
+    //Create a new Form
+    $form = new pm_Form_Simple();
+    $form->addElement('Text', 'cloudflareEmail', array(
+        'label' => 'Cloudflare Email',
+        'value' => pm_Settings::getDecrypted('cloudflareEmail'),
+        'required' => true,
+        'validator' => array(
+            array('EmailAddress', true)
+        )
+    ));
+    $form->addElement('Text', 'cloudflareApiKey', array(
+        'label' => 'Cloudflare API Key',
+        'value' => pm_Settings::getDecrypted('cloudflareApiKey'),
+        'required' => true,
+        'validator' => array(
+            array('NotEmpty', true)
+        )
+    ));
+
+    $form->addControlButtons(array(
+        'cancelLink' => pm_Context::getModulesListUrl(),
+    ));
+
+    if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
+      pm_Settings::setEncrypted('cloudflareEmail', $form->getValue('cloudflareEmail'));
+      pm_Settings::setEncrypted('cloudflareApiKey', $form->getValue('cloudflareApiKey'));
+
+      $this->_status->addMessage('info', 'Data was successfully saved.');
+      $this->_helper->json(array('redirect' => pm_Context::getBaseUrl()));
+    }
+
+    $this->view->form = $form;
+  }
+
   public function domainDataAction()
   {
     $list = $this->_getDomainList();
