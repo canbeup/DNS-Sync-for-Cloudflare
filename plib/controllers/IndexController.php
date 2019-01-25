@@ -16,7 +16,7 @@ class IndexController extends pm_Controller_Action
     parent::init();
 
     // Init title for all actions
-    $this->view->pageTitle = 'DNS Sync for Cloudflare';
+    $this->view->pageTitle = 'Cloudflare DNS Sync';
 
     // Init tabs for all actions
     $this->view->tabs = array(
