@@ -6,6 +6,16 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/cloudflare_dns_sync/library" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/plib/library" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/modules/cloudflare_dns_sync/library/Composer" isTestSource="false" packagePrefix="PleskExt\Composer\" />
+      <excludeFolder url="file://$MODULE_DIR$/plib/vendor/cloudflare/sdk" />
+      <excludeFolder url="file://$MODULE_DIR$/plib/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/plib/vendor/guzzlehttp/guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/plib/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/plib/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/plib/vendor/plesk/api-php-lib" />
+      <excludeFolder url="file://$MODULE_DIR$/plib/vendor/plesk/pm-api-stubs" />
+      <excludeFolder url="file://$MODULE_DIR$/plib/vendor/plesk/zf1" />
+      <excludeFolder url="file://$MODULE_DIR$/plib/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/plib/vendor/ralouphie/getallheaders" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

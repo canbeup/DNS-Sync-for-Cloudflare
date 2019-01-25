@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/plib/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/plib/vendor/composer" />
+      <path value="$PROJECT_DIR$/plib/vendor/cloudflare/sdk" />
+      <path value="$PROJECT_DIR$/plib/vendor/plesk/pm-api-stubs" />
+      <path value="$PROJECT_DIR$/plib/vendor/plesk/zf1" />
+      <path value="$PROJECT_DIR$/plib/vendor/plesk/api-php-lib" />
+      <path value="$PROJECT_DIR$/plib/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/plib/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/plib/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/plib/vendor/guzzlehttp/psr7" />
+    </include_path>
+  </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7" />
 </project>
