@@ -71,6 +71,34 @@ class SyncController extends pm_Controller_Action
     }
   }
 
+  public function syncDnsAction() {
+    if ($this->getRequest()->getParam("site_id") != null) {
+
+      $siteID = $this->getRequest()->getParam("site_id");
+
+      try {
+
+        $zone = $this->cloudflare->getZone($siteID);
+
+        if ($zone !== false) {
+
+          $this->view->pageTitle = 'Cloudflare DNS Sync for <b>'.$zone->name.'</b>';
+
+          $dnsSyncUtil = new DNSSyncUtil($siteID, $this->cloudflare, new PleskDNS());
+
+          $dnsSyncUtil->syncAll($this->_status);
+
+        } else {
+          $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
+        }
+      } catch (ClientException $exception) {
+        $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
+      }
+    } else {
+      $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
+    }
+  }
+
   public function domainDataAction()
   {
     if ($this->getRequest()->getParam("site_id") != null) {
