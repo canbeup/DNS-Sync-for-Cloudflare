@@ -88,6 +88,10 @@ class IndexController extends pm_Controller_Action
     $this->view->form = $form;
   }
 
+  public function syncAction()
+  {
+  }
+
   public function domainDataAction()
   {
     $list = $this->_getDomainList();
