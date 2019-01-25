@@ -1,6 +1,8 @@
 <?php
 
 use Cloudflare\API\Adapter\Guzzle;
+use Cloudflare\API\Auth\APIKey;
+use Cloudflare\API\Endpoints\DNS;
 use Cloudflare\API\Endpoints\Zones;
 use Cloudflare\API\Endpoints\User;
 use GuzzleHttp\Exception\ClientException;
@@ -15,26 +17,42 @@ class Cloudflare
   }
 
   /**
-   * @return bool|User
+   * @return User
    */
   public function getUser() {
-    try {
-      return new User($this->adapter);
-    } catch (ClientException $exception) {
-      return false;
-    }
+    return new User($this->adapter);
+  }
+
+  /**
+   * @return Zones
+   */
+  public function getZones()
+  {
+    return new Zones($this->adapter);
   }
 
   /**
    * @return bool|Zones
    */
-  public function getZones()
+  public function getZone($siteID)
   {
-    try {
-      return new Zones($this->adapter);
-    } catch (ClientException $exception) {
-      return false;
+    foreach (pm_Session::getCurrentDomains(true) as $domain) {
+      if ($domain->getId() == $siteID) {
+        foreach ($this->getZones()->listZones()->result as $zone) {
+          if ($zone->name == $domain->getName()) {
+            return $zone;
+          }
+        }
+      }
     }
+    return false;
+  }
+
+  /**
+   * @return DNS
+   */
+  public function getDNS() {
+    return new DNS($this->adapter);
   }
 
   /**
@@ -44,14 +62,17 @@ class Cloudflare
    */
   public static function login($email, $apiKey)
   {
-    if ($email != null && $apiKey != null) {
-      $key = new Cloudflare\API\Auth\APIKey($email, $apiKey);
-      $adapter = new Cloudflare\API\Adapter\Guzzle($key);
+    try {
+      if ($email != null && $apiKey != null) {
+        $key = new APIKey($email, $apiKey);
+        $adapter = new Guzzle($key);
 
-      return new Cloudflare($adapter);
-    } else {
-      return false;
+        return new Cloudflare($adapter);
+      }
+    } catch (ClientException $exception) {
+
     }
+    return false;
   }
 
 }
