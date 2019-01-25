@@ -121,7 +121,7 @@ class IndexController extends pm_Controller_Action
     $list->setData($data);
     $list->setColumns(array(
         'col-domain' => array(
-            'title' => 'Domain',
+            'title' => 'Domain Name',
             'noEscape' => true,
         ),
         'col-zone' => array(
