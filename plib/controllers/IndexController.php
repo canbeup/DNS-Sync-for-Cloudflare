@@ -3,6 +3,10 @@
 require 'classes/Cloudflare.php';
 require 'classes/PleskDNS.php';
 require 'classes/SettingsUtil.php';
+require 'helpers/CloudflareRecord.php';
+require 'utils/DNSListUtil.php';
+require 'utils/DNSSyncUtil.php';
+require 'utils/Functions.php';
 
 class IndexController extends pm_Controller_Action
 {
