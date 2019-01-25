@@ -43,11 +43,11 @@ class IndexController extends pm_Controller_Action
 
   public function domainsAction()
   {
-    if ($this->cloudflare !== false) {
+    try {
       $list = $this->_getDomainList();
 
       $this->view->list = $list;
-    } else {
+    } catch (GuzzleHttp\Exception\ClientException $exception) {
       $this->view->error = "Could not connect to Cloudflare";
     }
   }
