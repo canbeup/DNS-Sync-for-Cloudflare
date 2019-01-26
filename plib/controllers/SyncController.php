@@ -164,23 +164,28 @@ class SyncController extends pm_Controller_Action
 
       $siteID = $this->getRequest()->getParam("site_id");
 
-      try {
+      if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
 
-        $zone = $this->cloudflare->getZone($siteID);
+        try {
 
-        if ($zone !== false) {
+          $zone = $this->cloudflare->getZone($siteID);
 
-          $this->view->pageTitle = 'Cloudflare DNS Sync for <b>'.$zone->name.'</b>';
+          if ($zone !== false) {
 
-          $dnsSyncUtil = new DNSSyncUtil($siteID, $this->cloudflare, new PleskDNS());
+            $this->view->pageTitle = 'Cloudflare DNS Sync for <b>' . $zone->name . '</b>';
 
-          $dnsSyncUtil->syncAll($this->_status);
+            $dnsSyncUtil = new DNSSyncUtil($siteID, $this->cloudflare, new PleskDNS());
 
-        } else {
+            $dnsSyncUtil->syncAll($this->_status);
+
+          } else {
+            $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
+          }
+        } catch (ClientException $exception) {
           $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
         }
-      } catch (ClientException $exception) {
-        $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
+      } else {
+        $this->_status->addMessage('error', 'You do not have access to this domain.');
       }
     } else {
       $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
