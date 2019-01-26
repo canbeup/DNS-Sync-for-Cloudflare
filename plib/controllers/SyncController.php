@@ -24,6 +24,18 @@ class SyncController extends pm_Controller_Action
     // Init title for all actions
     $this->view->pageTitle = 'Cloudflare DNS Sync';
 
+    // Init tabs for all actions
+    $this->view->tabs = array(
+        array(
+            'title' => 'DNS',
+            'action' => 'domains',
+        ),
+        array(
+            'title' => 'Settings',
+            'action' => 'settings',
+        )
+    );
+
     $this->cloudflare = Cloudflare::login(
         pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_EMAIL)),
         pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_API_KEY))
