@@ -72,9 +72,16 @@ class SyncController extends pm_Controller_Action
                     'title' => 'Sync DNS',
                     'description' => 'Sync the Plesk DNS to Cloudflare DNS',
                     'class' => 'sb-button1',
-                    'action' => 'sync-dns?site_id=' . $siteID,
+                    'action' => 'domain?site_id=' . $siteID.'&sync=true',
                 ]
             ];
+
+            if ($this->getRequest()->getParam('sync') == 'true') {
+              //Sync the Plesk DNS to Cloudflare
+              $dnsSyncUtil = new DNSSyncUtil($siteID, $this->cloudflare, new PleskDNS());
+
+              $dnsSyncUtil->syncAll($this->_status);
+            }
 
             $this->view->list = $this->_getRecordsList($siteID);
 
@@ -156,39 +163,6 @@ class SyncController extends pm_Controller_Action
       }
     } else {
       $this->_status->addMessage('error', 'There was no domain selected.');
-    }
-  }
-
-  public function syncDnsAction() {
-    if ($this->getRequest()->getParam("site_id") != null) {
-
-      $siteID = $this->getRequest()->getParam("site_id");
-
-      if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
-
-        try {
-
-          $zone = $this->cloudflare->getZone($siteID);
-
-          if ($zone !== false) {
-
-            $this->view->pageTitle = 'Cloudflare DNS Sync for <b>' . $zone->name . '</b>';
-
-            $dnsSyncUtil = new DNSSyncUtil($siteID, $this->cloudflare, new PleskDNS());
-
-            $dnsSyncUtil->syncAll($this->_status);
-
-          } else {
-            $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
-          }
-        } catch (ClientException $exception) {
-          $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
-        }
-      } else {
-        $this->_status->addMessage('error', 'You do not have access to this domain.');
-      }
-    } else {
-      $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
     }
   }
 
