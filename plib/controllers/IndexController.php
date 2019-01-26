@@ -31,10 +31,6 @@ class IndexController extends pm_Controller_Action
         array(
             'title' => 'API',
             'action' => 'api',
-        ),
-        array(
-            'title' => 'Settings',
-            'action' => 'settings',
         )
     );
 
@@ -94,10 +90,6 @@ class IndexController extends pm_Controller_Action
     }
 
     $this->view->form = $form;
-  }
-
-  public function settingsAction() {
-
   }
 
   public function domainDataAction()

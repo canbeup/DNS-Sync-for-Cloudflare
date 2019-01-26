@@ -71,6 +71,27 @@ class SyncController extends pm_Controller_Action
     }
   }
 
+  public function settingsAction()
+  {
+    //Create a new Form
+    $form = new pm_Form_Simple();
+    $form->addElement('checkbox', SettingsUtil::CLOUDFLARE_PROXY, array(
+        'label' => 'Traffic thru Cloudflare',
+        'value' => pm_Settings::get(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_PROXY)),
+    ));
+
+    $form->addControlButtons(array(
+        'cancelLink' => pm_Context::getModulesListUrl(),
+    ));
+
+    if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
+      pm_Settings::setEncrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_PROXY), $form->getValue(SettingsUtil::CLOUDFLARE_PROXY));
+
+      $this->_status->addMessage('info', 'Settings were successfully saved.');
+      $this->_helper->json(array('redirect' => pm_Context::getBaseUrl()));
+    }
+  }
+
   public function syncDnsAction() {
     if ($this->getRequest()->getParam("site_id") != null) {
 
