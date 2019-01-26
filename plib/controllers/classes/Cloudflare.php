@@ -69,9 +69,7 @@ class Cloudflare
 
         return new Cloudflare($adapter);
       }
-    } catch (ClientException $exception) {
-
-    }
+    } catch (ClientException $exception) { }
     return false;
   }
 

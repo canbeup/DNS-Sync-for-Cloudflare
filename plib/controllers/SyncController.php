@@ -101,9 +101,7 @@ class SyncController extends pm_Controller_Action
 
       try {
         $this->view->pageTitle = 'Cloudflare DNS Sync for <b>' . pm_Domain::getByDomainId($siteID)->getName() . '</b>';
-      } catch (pm_Exception $e) {
-
-      }
+      } catch (pm_Exception $e) { }
 
       $this->view->tabs[1]['active'] = true;
 
