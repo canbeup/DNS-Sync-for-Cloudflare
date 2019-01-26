@@ -24,17 +24,25 @@ class SyncController extends pm_Controller_Action
     // Init title for all actions
     $this->view->pageTitle = 'Cloudflare DNS Sync';
 
-    // Init tabs for all actions
-    $this->view->tabs = array(
-        array(
-            'title' => 'DNS',
-            'action' => 'domain',
-        ),
-        array(
-            'title' => 'Settings',
-            'action' => 'settings',
-        )
-    );
+    if ($this->getRequest()->getParam("site_id") != null) {
+
+      $siteID = $this->getRequest()->getParam("site_id");
+
+      // Init tabs for all actions
+      $this->view->tabs = array(
+          array(
+              'title' => 'DNS',
+              'action' => 'domain',
+              'link' => 'domain?site_id='.$siteID,
+          ),
+          array(
+              'title' => 'Settings',
+              'action' => 'settings',
+              'link' => 'settings?site_id='.$siteID,
+          )
+      );
+
+    }
 
     $this->cloudflare = Cloudflare::login(
         pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_EMAIL)),
@@ -52,6 +60,8 @@ class SyncController extends pm_Controller_Action
     if ($this->getRequest()->getParam("site_id") != null) {
 
       $siteID = $this->getRequest()->getParam("site_id");
+
+      $this->view->tabs[0]['active'] = true;
 
       try {
 
@@ -95,6 +105,8 @@ class SyncController extends pm_Controller_Action
     $form->addControlButtons(array(
         'cancelLink' => pm_Context::getModulesListUrl(),
     ));
+      $this->view->tabs[1]['active'] = true;
+
 
     if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
       pm_Settings::setEncrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_PROXY), $form->getValue(SettingsUtil::CLOUDFLARE_PROXY));
