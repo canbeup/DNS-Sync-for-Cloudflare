@@ -21,22 +21,22 @@ class DNSListUtil extends DNSUtilBase
         $cloudflareRecord = $this->getCloudflareRecord($pleskRecord);
 
         $cloudflareValue = 'Record not found';
-        $cloudflareStatus = pm_Context::getBaseUrl() . 'images/error.png';
+        $syncStatus = pm_Context::getBaseUrl() . 'images/error.png';
 
         if ($cloudflareRecord !== false) {
           $cloudflareValue = $cloudflareRecord->content;
 
           if ($this->doRecordsMatch($pleskRecord, $cloudflareRecord)) {
-            $cloudflareStatus = pm_Context::getBaseUrl() . 'images/success.png';
+            $syncStatus = pm_Context::getBaseUrl() . 'images/success.png';
           } else {
-            $cloudflareStatus = pm_Context::getBaseUrl() . 'images/warning.png';
+            $syncStatus = pm_Context::getBaseUrl() . 'images/warning.png';
           }
         }
 
         $data[] = array(
             'col-host' => $this->removeDotAfterTLD($pleskRecord->host),
             'col-type' => $pleskRecord->type,
-            'col-status' => '<img src="' . $cloudflareStatus . '"/>',
+            'col-status' => '<img src="' . $syncStatus . '"/>',
             'col-plesk' => $pleskRecord->value,
             'col-cloudflare' => $cloudflareValue
         );
