@@ -109,17 +109,18 @@ class SyncController extends pm_Controller_Action
       $form = new pm_Form_Simple();
       $form->addElement('checkbox', SettingsUtil::CLOUDFLARE_PROXY, array(
           'label' => 'Traffic thru Cloudflare',
-          'value' => pm_Settings::get(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_PROXY)),
+          'value' => pm_Settings::get(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_PROXY), true),
       ));
       $form->addControlButtons(array(
-          'cancelLink' => pm_Context::getModulesListUrl(),
+          'sendTitle' => 'Save',
+          'cancelLink' => pm_Context::getBaseUrl().'sync/domain?site_id='.$siteID,
       ));
 
       if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
         pm_Settings::setEncrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_PROXY), $form->getValue(SettingsUtil::CLOUDFLARE_PROXY));
 
         $this->_status->addMessage('info', 'Settings were successfully saved.');
-        $this->_helper->json(array('redirect' => pm_Context::getBaseUrl()));
+        $this->_helper->json(array('redirect' => pm_Context::getBaseUrl().'sync/domain?site_id='.$siteID));
       }
 
       $this->view->form = $form;
