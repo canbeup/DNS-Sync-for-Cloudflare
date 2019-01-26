@@ -16,28 +16,32 @@ class DNSListUtil extends DNSUtilBase
 
     foreach ($this->getPleskRecords() as $pleskRecord) {
 
-      $cloudflareRecord = $this->getCloudflareRecord($pleskRecord);
+      if (in_array($pleskRecord->type, RecordsHelper::getAvailableRecords())) {
 
-      $cloudflareValue = 'Record not found';
-      $cloudflareStatus = pm_Context::getBaseUrl().'images/error.png';
+        $cloudflareRecord = $this->getCloudflareRecord($pleskRecord);
 
-      if ($cloudflareRecord !== false) {
-        $cloudflareValue = $cloudflareRecord->content;
+        $cloudflareValue = 'Record not found';
+        $cloudflareStatus = pm_Context::getBaseUrl() . 'images/error.png';
 
-        if ($this->doRecordsMatch($pleskRecord, $cloudflareRecord)) {
-          $cloudflareStatus = pm_Context::getBaseUrl().'images/success.png';
-        } else {
-          $cloudflareStatus = pm_Context::getBaseUrl().'images/warning.png';
+        if ($cloudflareRecord !== false) {
+          $cloudflareValue = $cloudflareRecord->content;
+
+          if ($this->doRecordsMatch($pleskRecord, $cloudflareRecord)) {
+            $cloudflareStatus = pm_Context::getBaseUrl() . 'images/success.png';
+          } else {
+            $cloudflareStatus = pm_Context::getBaseUrl() . 'images/warning.png';
+          }
         }
-      }
 
-      $data[] = array(
-          'col-host' => $this->removeDotAfterTLD($pleskRecord->host),
-          'col-type' => $pleskRecord->type,
-          'col-status' => '<img src="'.$cloudflareStatus.'"/>',
-          'col-plesk' => $pleskRecord->value,
-          'col-cloudflare' => $cloudflareValue
-      );
+        $data[] = array(
+            'col-host' => $this->removeDotAfterTLD($pleskRecord->host),
+            'col-type' => $pleskRecord->type,
+            'col-status' => '<img src="' . $cloudflareStatus . '"/>',
+            'col-plesk' => $pleskRecord->value,
+            'col-cloudflare' => $cloudflareValue
+        );
+
+      }
 
     }
 
