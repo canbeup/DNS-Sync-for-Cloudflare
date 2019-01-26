@@ -18,33 +18,37 @@ class DNSSyncUtil extends DNSUtilBase
 
     foreach ($this->getPleskRecords() as $pleskRecord) {
 
-      $cloudflareRecord = $this->getCloudflareRecord($pleskRecord);
+      if (DomainSettingsHelper::syncRecordType($pleskRecord->type, $this->siteID)) {
 
-      if ($cloudflareRecord !== false) {
+        $cloudflareRecord = $this->getCloudflareRecord($pleskRecord);
 
-        if (!$this->doRecordsMatch($pleskRecord, $cloudflareRecord)) {
+        if ($cloudflareRecord !== false) {
 
-          //Update the record in Cloudflare
-          $cloudflareDNS->updateRecordDetails($this->zoneID, $cloudflareRecord->id, array(
-              'type' => $pleskRecord->type,
-              'name' => $pleskRecord->host,
-              'content' => $pleskRecord->value
-          ));
+          if (!$this->doRecordsMatch($pleskRecord, $cloudflareRecord)) {
 
-          $recordsUpdated++;
+            //Update the record in Cloudflare
+            $cloudflareDNS->updateRecordDetails($this->zoneID, $cloudflareRecord->id, array(
+                'type' => $pleskRecord->type,
+                'name' => $pleskRecord->host,
+                'content' => $pleskRecord->value
+            ));
+
+            $recordsUpdated++;
+          }
+
+        } else {
+          $proxied = false;
+
+          if ($pleskRecord->type == 'A' || $pleskRecord->type == 'AAAA' || $pleskRecord->type == 'CNAME') {
+            $proxied = DomainSettingsHelper::useCloudflareProxy($this->siteID);
+          }
+
+          //Create a new record in cloudflare
+          if ($cloudflareDNS->addRecord($this->zoneID, $pleskRecord->type, $pleskRecord->host, $pleskRecord->value, 0, $proxied) === true) {
+            $recordsCreated++;
+          }
         }
 
-      } else {
-        $proxied = false;
-
-        if ($pleskRecord->type == 'A' || $pleskRecord->type == 'AAAA' || $pleskRecord->type == 'CNAME') {
-          $proxied = true;
-        }
-
-        //Create a new record in cloudflare
-        if ($cloudflareDNS->addRecord($this->zoneID, $pleskRecord->type, $pleskRecord->host, $pleskRecord->value, 0, $proxied) === true) {
-          $recordsCreated++;
-        }
       }
 
     }
