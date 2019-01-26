@@ -55,35 +55,40 @@ class SyncController extends pm_Controller_Action
 
       $siteID = $this->getRequest()->getParam("site_id");
 
-      $this->view->tabs[0]['active'] = true;
+      if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
 
-      try {
+        $this->view->tabs[0]['active'] = true;
 
-        $zone = $this->cloudflare->getZone($siteID);
+        try {
 
-        if ($zone !== false) {
+          $zone = $this->cloudflare->getZone($siteID);
 
-          $this->view->pageTitle = 'Cloudflare DNS Sync for <b>'.$zone->name.'</b>';
+          if ($zone !== false) {
 
-          $this->view->syncTools = [
-              [
-                  'title' => 'Sync DNS',
-                  'description' => 'Sync the Plesk DNS to Cloudflare DNS',
-                  'class' => 'sb-button1',
-                  'action' => 'sync-dns?site_id='.$siteID,
-              ]
-          ];
+            $this->view->pageTitle = 'Cloudflare DNS Sync for <b>' . $zone->name . '</b>';
 
-          $this->view->list = $this->_getRecordsList($siteID);
+            $this->view->syncTools = [
+                [
+                    'title' => 'Sync DNS',
+                    'description' => 'Sync the Plesk DNS to Cloudflare DNS',
+                    'class' => 'sb-button1',
+                    'action' => 'sync-dns?site_id=' . $siteID,
+                ]
+            ];
 
-        } else {
+            $this->view->list = $this->_getRecordsList($siteID);
+
+          } else {
+            $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
+          }
+        } catch (ClientException $exception) {
           $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
         }
-      } catch (ClientException $exception) {
-        $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
+      } else {
+        $this->_status->addMessage('error', 'You do not have access to this domain.');
       }
     } else {
-      $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
+      $this->_status->addMessage('error', 'There was no domain selected.');
     }
   }
 
