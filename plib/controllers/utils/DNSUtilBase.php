@@ -60,13 +60,13 @@ abstract class DNSUtilBase
    * @return bool|CloudflareRecord
    */
   protected function getCloudflareRecord(Info $pleskRecord) {
-    if ($pleskRecord->type == 'A' || $pleskRecord->type == 'AAAA' || $pleskRecord->type == 'TXT' || $pleskRecord->type == 'CNAME' || $pleskRecord->type == 'MX') {
+    if ($pleskRecord->type == 'A' || $pleskRecord->type == 'AAAA' || $pleskRecord->type == 'TXT' || $pleskRecord->type == 'CNAME') {
       foreach ($this->getCloudflareRecords() as $cloudflareRecord) {
         if ($pleskRecord->type == $cloudflareRecord->type && $this->removeDotAfterTLD($pleskRecord->host) == $cloudflareRecord->name) {
           return $cloudflareRecord;
         }
       }
-    } else if ($pleskRecord->type == 'NS') {
+    } else if ($pleskRecord->type == 'NS' || $pleskRecord->type == 'MX') {
       foreach ($this->getCloudflareRecords() as $cloudflareRecord) {
         if ($pleskRecord->type == $cloudflareRecord->type && $this->removeDotAfterTLD($pleskRecord->host) == $cloudflareRecord->name && $this->removeDotAfterTLD($pleskRecord->value) == $cloudflareRecord->content) {
           return $cloudflareRecord;
