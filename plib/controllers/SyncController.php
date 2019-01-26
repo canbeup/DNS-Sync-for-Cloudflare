@@ -1,14 +1,8 @@
 <?php
 
-use GuzzleHttp\Exception\ClientException;
+include 'ClassLoader.php';
 
-require 'classes/Cloudflare.php';
-require 'classes/PleskDNS.php';
-require 'classes/SettingsUtil.php';
-require 'helpers/CloudflareRecord.php';
-require 'utils/DNSListUtil.php';
-require 'utils/DNSSyncUtil.php';
-require 'utils/Functions.php';
+use GuzzleHttp\Exception\ClientException;
 
 class SyncController extends pm_Controller_Action
 {
