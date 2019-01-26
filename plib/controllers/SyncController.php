@@ -98,32 +98,64 @@ class SyncController extends pm_Controller_Action
 
       $siteID = $this->getRequest()->getParam("site_id");
 
-      try {
-        $this->view->pageTitle = 'Cloudflare DNS Sync for <b>' . pm_Domain::getByDomainId($siteID)->getName() . '</b>';
-      } catch (pm_Exception $e) { }
+      if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
 
-      $this->view->tabs[1]['active'] = true;
+        try {
+          $this->view->pageTitle = 'Cloudflare DNS Sync for <b>' . pm_Domain::getByDomainId($siteID)->getName() . '</b>';
+        } catch (pm_Exception $e) {
+        }
 
-      //Create a new Form
-      $form = new pm_Form_Simple();
-      $form->addElement('checkbox', SettingsUtil::CLOUDFLARE_PROXY, array(
-          'label' => 'Traffic thru Cloudflare',
-          'value' => pm_Settings::get(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_PROXY), true),
-      ));
-      $form->addControlButtons(array(
-          'sendTitle' => 'Save',
-          'cancelLink' => pm_Context::getBaseUrl().'sync/domain?site_id='.$siteID,
-      ));
+        $this->view->tabs[1]['active'] = true;
 
-      if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
-        pm_Settings::setEncrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_PROXY), $form->getValue(SettingsUtil::CLOUDFLARE_PROXY));
+        //List the Type of available records
+        $recordOptions = RecordsHelper::getAvailableRecords();
 
-        $this->_status->addMessage('info', 'Settings were successfully saved.');
-        $this->_helper->json(array('redirect' => pm_Context::getBaseUrl().'sync/domain?site_id='.$siteID));
+        $selectedRecords = array();
+
+        foreach ($recordOptions as $option) {
+          if (DomainSettingsHelper::syncRecordType($option, $siteID)) {
+            array_push($selectedRecords, $option);
+          }
+        }
+
+        //Create a new Form
+        $form = new pm_Form_Simple();
+        $form->addElement('checkbox', SettingsUtil::CLOUDFLARE_PROXY, array(
+            'label' => 'Traffic thru Cloudflare',
+            'value' => DomainSettingsHelper::useCloudflareProxy($siteID),
+        ));
+        $form->addElement('multiCheckbox', SettingsUtil::CLOUDFLARE_SYNC_TYPES, array(
+            'label' => 'Select the type of records you want to sync',
+            'multiOptions' => $recordOptions,
+            'value' => $selectedRecords
+        ));
+
+        $form->addControlButtons(array(
+            'sendTitle' => 'Save',
+            'cancelLink' => pm_Context::getActionUrl('sync', 'domain?site_id=' . $siteID),
+        ));
+
+        if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
+          pm_Settings::set(SettingsUtil::getDomainKey(SettingsUtil::CLOUDFLARE_PROXY, $siteID), $form->getValue(SettingsUtil::CLOUDFLARE_PROXY));
+
+          foreach ($recordOptions as $option) {
+            try {
+              pm_Settings::set(SettingsUtil::getDomainKey('record' . $option, $siteID), in_array($option, $form->getValue(SettingsUtil::CLOUDFLARE_SYNC_TYPES)));
+            } catch (Exception $e) {
+            }
+          }
+
+          $this->_status->addMessage('info', 'Settings were successfully saved.');
+          $this->_helper->json(array('redirect' => pm_Context::getActionUrl('sync', 'domain?site_id=' . $siteID)));
+        }
+
+        $this->view->form = $form;
+
+      } else {
+        $this->_status->addMessage('error', 'You do not have access to this domain.');
       }
-
-      $this->view->form = $form;
-
+    } else {
+      $this->_status->addMessage('error', 'There was no domain selected.');
     }
   }
 
