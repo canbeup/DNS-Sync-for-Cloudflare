@@ -85,7 +85,7 @@ abstract class DNSUtilBase
     //Record Type (A, AAAA, CNAME, TEXT, Etc)
     if ($pleskRecord->type == $cloudflareRecord->type) {
       //The Domain name (sub.domain.tld)
-      if ($this->removeDotAfterTLD($pleskRecord->host) == $this->removeDotAfterTLD($cloudflareRecord->name)) {
+      if ($this->removeDotAfterTLD($pleskRecord->host) == $cloudflareRecord->name) {
         //The value of the (sub)domain
         if ($this->removeDotAfterTLD($pleskRecord->value) == $cloudflareRecord->content) {
           //If all of this is true, then the domains match
