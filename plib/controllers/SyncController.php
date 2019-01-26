@@ -132,7 +132,7 @@ class SyncController extends pm_Controller_Action
 
         $form->addControlButtons(array(
             'sendTitle' => 'Save',
-            'cancelLink' => pm_Context::getActionUrl('sync', 'domain?site_id=' . $siteID),
+            'cancelLink' => pm_Context::getActionUrl('sync', 'settings?site_id=' . $siteID),
         ));
 
         if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
