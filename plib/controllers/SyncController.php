@@ -95,24 +95,37 @@ class SyncController extends pm_Controller_Action
 
   public function settingsAction()
   {
-    //Create a new Form
-    $form = new pm_Form_Simple();
-    $form->addElement('checkbox', SettingsUtil::CLOUDFLARE_PROXY, array(
-        'label' => 'Traffic thru Cloudflare',
-        'value' => pm_Settings::get(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_PROXY)),
-    ));
+    if ($this->getRequest()->getParam("site_id") != null) {
 
-    $form->addControlButtons(array(
-        'cancelLink' => pm_Context::getModulesListUrl(),
-    ));
+      $siteID = $this->getRequest()->getParam("site_id");
+
+      try {
+        $this->view->pageTitle = 'Cloudflare DNS Sync for <b>' . pm_Domain::getByDomainId($siteID)->getName() . '</b>';
+      } catch (pm_Exception $e) {
+
+      }
+
       $this->view->tabs[1]['active'] = true;
 
+      //Create a new Form
+      $form = new pm_Form_Simple();
+      $form->addElement('checkbox', SettingsUtil::CLOUDFLARE_PROXY, array(
+          'label' => 'Traffic thru Cloudflare',
+          'value' => pm_Settings::get(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_PROXY)),
+      ));
+      $form->addControlButtons(array(
+          'cancelLink' => pm_Context::getModulesListUrl(),
+      ));
 
-    if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
-      pm_Settings::setEncrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_PROXY), $form->getValue(SettingsUtil::CLOUDFLARE_PROXY));
+      if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
+        pm_Settings::setEncrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_PROXY), $form->getValue(SettingsUtil::CLOUDFLARE_PROXY));
 
-      $this->_status->addMessage('info', 'Settings were successfully saved.');
-      $this->_helper->json(array('redirect' => pm_Context::getBaseUrl()));
+        $this->_status->addMessage('info', 'Settings were successfully saved.');
+        $this->_helper->json(array('redirect' => pm_Context::getBaseUrl()));
+      }
+
+      $this->view->form = $form;
+
     }
   }
 
