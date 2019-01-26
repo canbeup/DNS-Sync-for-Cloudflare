@@ -30,7 +30,8 @@ class DNSSyncUtil extends DNSUtilBase
             $cloudflareDNS->updateRecordDetails($this->zoneID, $cloudflareRecord->id, array(
                 'type' => $pleskRecord->type,
                 'name' => $pleskRecord->host,
-                'content' => $pleskRecord->value
+                'content' => $pleskRecord->value,
+                'porxied' => DomainSettingsHelper::useCloudflareProxy($pleskRecord->siteId)
             ));
 
             $recordsUpdated++;
