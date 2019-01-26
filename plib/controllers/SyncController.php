@@ -28,7 +28,7 @@ class SyncController extends pm_Controller_Action
     $this->view->tabs = array(
         array(
             'title' => 'DNS',
-            'action' => 'domains',
+            'action' => 'domain',
         ),
         array(
             'title' => 'Settings',
