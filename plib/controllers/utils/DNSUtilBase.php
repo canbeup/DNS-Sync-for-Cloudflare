@@ -89,7 +89,7 @@ abstract class DNSUtilBase
         //The value of the (sub)domain
         if ($this->removeDotAfterTLD($pleskRecord->value) == $cloudflareRecord->content) {
           //Check for the domain settings (Cloudflare Traffic)
-          if (DomainSettingsHelper::useCloudflareProxy($pleskRecord->siteId) === $cloudflareRecord->proxied) {
+          if (DomainSettingsHelper::useCloudflareProxy($pleskRecord->siteId) == $cloudflareRecord->proxied) {
             //If all of this is true, then the domains match
             return true;
           }
