@@ -63,14 +63,12 @@ abstract class DNSUtilBase
     if ($pleskRecord->type == 'A' || $pleskRecord->type == 'AAAA' || $pleskRecord->type == 'TXT' || $pleskRecord->type == 'CNAME' || $pleskRecord->type == 'MX') {
       foreach ($this->getCloudflareRecords() as $cloudflareRecord) {
         if ($pleskRecord->type == $cloudflareRecord->type && $this->removeDotAfterTLD($pleskRecord->host) == $cloudflareRecord->name) {
-          $pleskRecord->value = $this->removeDotAfterTLD($pleskRecord->value);
           return $cloudflareRecord;
         }
       }
     } else if ($pleskRecord->type == 'NS') {
       foreach ($this->getCloudflareRecords() as $cloudflareRecord) {
         if ($pleskRecord->type == $cloudflareRecord->type && $this->removeDotAfterTLD($pleskRecord->host) == $cloudflareRecord->name && $this->removeDotAfterTLD($pleskRecord->value) == $cloudflareRecord->content) {
-          $pleskRecord->value = $this->removeDotAfterTLD($pleskRecord->value);
           return $cloudflareRecord;
         }
       }
