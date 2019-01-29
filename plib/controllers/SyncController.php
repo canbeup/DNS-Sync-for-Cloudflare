@@ -212,10 +212,6 @@ class SyncController extends pm_Controller_Action
             'title' => 'Cloudflare Value',
             'noEscape' => true,
         ),
-        'col-cloudflare-proxy' => array(
-            'title' => 'Cloudflare Proxy',
-            'noEscape' => true,
-        ),
         'col-plesk' => array(
             'title' => 'Plesk Value',
             'noEscape' => true,
