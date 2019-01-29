@@ -67,9 +67,9 @@ class DNSListUtil extends DNSUtilBase
     return $data;
   }
 
-  private function minifyValue($value) {
-    if (strlen($value) > 100) {
-      return substr($value, 0, 100).'...';
+  private function minifyValue($value, $length = 60) {
+    if (strlen($value) > $length) {
+      return substr($value, 0, $length).'...';
     }
     return $value;
   }
