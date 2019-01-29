@@ -39,13 +39,18 @@ class DNSSyncUtil extends DNSUtilBase
 
         } else {
           $proxied = false;
+          $priority = '';
 
           if ($pleskRecord->type == 'A' || $pleskRecord->type == 'AAAA' || $pleskRecord->type == 'CNAME') {
             $proxied = DomainSettingsHelper::useCloudflareProxy($this->siteID);
           }
 
+          if ($pleskRecord->type == 'MX') {
+            $priority = $pleskRecord->opt;
+          }
+
           //Create a new record in cloudflare
-          if ($cloudflareDNS->addRecord($this->zoneID, $pleskRecord->type, $pleskRecord->host, $pleskRecord->value, 0, $proxied) === true) {
+          if ($cloudflareDNS->addRecord($this->zoneID, $pleskRecord->type, $pleskRecord->host, $pleskRecord->value, 0, $proxied, $priority) === true) {
             $recordsCreated++;
           }
         }
