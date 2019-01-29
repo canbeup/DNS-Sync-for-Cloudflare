@@ -15,4 +15,5 @@ class CloudflareRecord
   public $created_on;
   public $modified_on;
   public $data;
+  public $priority;
 }
