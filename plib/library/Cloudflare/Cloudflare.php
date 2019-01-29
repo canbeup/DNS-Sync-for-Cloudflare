@@ -7,7 +7,8 @@ use Cloudflare\API\Endpoints\Zones;
 use Cloudflare\API\Endpoints\User;
 use GuzzleHttp\Exception\ClientException;
 
-class Cloudflare
+class Modules_CloudflareDnsSync_Cloudflare
+
 {
   private $adapter;
 
@@ -58,7 +59,7 @@ class Cloudflare
   /**
    * @param $email
    * @param $apiKey
-   * @return bool|Cloudflare
+   * @return bool|Modules_CloudflareDnsSync_Cloudflare
    */
   public static function login($email, $apiKey)
   {
@@ -67,7 +68,7 @@ class Cloudflare
         $key = new APIKey($email, $apiKey);
         $adapter = new Guzzle($key);
 
-        return new Cloudflare($adapter);
+        return new Modules_CloudflareDnsSync_Cloudflare($adapter);
       }
     } catch (ClientException $exception) { }
     return false;

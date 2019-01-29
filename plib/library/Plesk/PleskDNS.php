@@ -3,7 +3,7 @@
 use Cloudflare\API\Endpoints\DNS;
 use PleskX\Api\Struct\Dns\Info;
 
-class PleskDNS
+class Modules_CloudflareDnsSync_PleskDNS
 {
   private $client;
 

@@ -1,6 +1,6 @@
 <?php
 
-class RecordsHelper
+class Modules_CloudflareDnsSync_RecordsHelper
 {
   public static function getAvailableRecords() {
     return array(

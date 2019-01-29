@@ -5,7 +5,7 @@ use GuzzleHttp\Exception\ClientException;
 class SyncController extends pm_Controller_Action
 {
   /**
-   * @var $cloudflare Cloudflare|bool
+   * @var $cloudflare Modules_CloudflareDnsSync_Cloudflare|bool
    */
   private $cloudflare;
 
@@ -36,9 +36,9 @@ class SyncController extends pm_Controller_Action
 
     }
 
-    $this->cloudflare = Cloudflare::login(
-        pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_EMAIL)),
-        pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_API_KEY))
+    $this->cloudflare = Modules_CloudflareDnsSync_Cloudflare::login(
+        pm_Settings::getDecrypted(Modules_CloudflareDnsSync_SettingsUtil::getUserKey(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_EMAIL)),
+        pm_Settings::getDecrypted(Modules_CloudflareDnsSync_SettingsUtil::getUserKey(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_API_KEY))
     );
   }
 
@@ -77,7 +77,7 @@ class SyncController extends pm_Controller_Action
             //Check if we need to sync
             if ($this->getRequest()->getParam('sync') != null) {
               //Create the Sync Util
-              $dnsSyncUtil = new DNSSyncUtil($siteID, $this->cloudflare, new PleskDNS());
+              $dnsSyncUtil = new Modules_CloudflareDnsSync_DNSSyncUtil($siteID, $this->cloudflare, new Modules_CloudflareDnsSync_PleskDNS());
 
               //Check if the sync method is all
               if ($this->getRequest()->getParam('sync') == 'all') {
@@ -125,23 +125,23 @@ class SyncController extends pm_Controller_Action
         $this->view->tabs[1]['active'] = true;
 
         //List the Type of available records
-        $recordOptions = RecordsHelper::getAvailableRecords();
+        $recordOptions = Modules_CloudflareDnsSync_RecordsHelper::getAvailableRecords();
 
         $selectedRecords = array();
 
         foreach ($recordOptions as $option) {
-          if (DomainSettingsHelper::syncRecordType($option, $siteID)) {
+          if (Modules_CloudflareDnsSync_DomainSettingsHelper::syncRecordType($option, $siteID)) {
             array_push($selectedRecords, $option);
           }
         }
 
         //Create a new Form
         $form = new pm_Form_Simple();
-        $form->addElement('checkbox', SettingsUtil::CLOUDFLARE_PROXY, array(
+        $form->addElement('checkbox', Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_PROXY, array(
             'label' => 'Traffic thru Cloudflare',
-            'value' => DomainSettingsHelper::useCloudflareProxy($siteID),
+            'value' => Modules_CloudflareDnsSync_DomainSettingsHelper::useCloudflareProxy($siteID),
         ));
-        $form->addElement('multiCheckbox', SettingsUtil::CLOUDFLARE_SYNC_TYPES, array(
+        $form->addElement('multiCheckbox', Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_SYNC_TYPES, array(
             'label' => 'Select the type of records you want to sync',
             'multiOptions' => $recordOptions,
             'value' => $selectedRecords
@@ -153,11 +153,11 @@ class SyncController extends pm_Controller_Action
         ));
 
         if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
-          pm_Settings::set(SettingsUtil::getDomainKey(SettingsUtil::CLOUDFLARE_PROXY, $siteID), $form->getValue(SettingsUtil::CLOUDFLARE_PROXY));
+          pm_Settings::set(Modules_CloudflareDnsSync_SettingsUtil::getDomainKey(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_PROXY, $siteID), $form->getValue(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_PROXY));
 
           foreach ($recordOptions as $option) {
             try {
-              pm_Settings::set(SettingsUtil::getDomainKey('record' . $option, $siteID), in_array($option, $form->getValue(SettingsUtil::CLOUDFLARE_SYNC_TYPES)));
+              pm_Settings::set(Modules_CloudflareDnsSync_SettingsUtil::getDomainKey('record' . $option, $siteID), in_array($option, $form->getValue(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_SYNC_TYPES)));
             } catch (Exception $e) {
             }
           }
@@ -189,7 +189,7 @@ class SyncController extends pm_Controller_Action
 
   private function _getRecordsList($siteID)
   {
-    $data = (new DNSListUtil($siteID, $this->cloudflare, new PleskDNS()))->getList();
+    $data = (new Modules_CloudflareDnsSync_ModulesCloudflareDnsSync_DNSListUtil($siteID, $this->cloudflare, new Modules_CloudflareDnsSync_PleskDNS()))->getList();
 
     $list = new pm_View_List_Simple($this->view, $this->_request);
     $list->setData($data);

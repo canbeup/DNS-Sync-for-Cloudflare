@@ -2,7 +2,7 @@
 
 use PleskX\Api\Struct\Dns\Info;
 
-abstract class DNSUtilBase
+abstract class Modules_CloudflareDnsSync_DNSUtilBase
 {
   protected $cloudflare;
   protected $pleskDNS;
@@ -17,11 +17,11 @@ abstract class DNSUtilBase
   /**
    * DNSUtilBase constructor.
    * @param $siteID
-   * @param Cloudflare $cloudflare
-   * @param PleskDNS $pleskDNS
+   * @param Modules_CloudflareDnsSync_Cloudflare $cloudflare
+   * @param Modules_CloudflareDnsSync_PleskDNS $pleskDNS
    * @throws pm_Exception
    */
-  public function __construct($siteID, Cloudflare $cloudflare, PleskDNS $pleskDNS)
+  public function __construct($siteID, Modules_CloudflareDnsSync_Cloudflare $cloudflare, Modules_CloudflareDnsSync_PleskDNS $pleskDNS)
   {
     //Save the Site ID
     $this->siteID = $siteID;
@@ -40,7 +40,7 @@ abstract class DNSUtilBase
   }
 
   /**
-   * @return CloudflareRecord[]
+   * @return Modules_CloudflareDnsSync_CloudflareRecord[]
    */
   public function getCloudflareRecords(): array
   {
@@ -57,7 +57,7 @@ abstract class DNSUtilBase
 
   /**
    * @param Info $pleskRecord
-   * @return bool|CloudflareRecord
+   * @return bool|Modules_CloudflareDnsSync_CloudflareRecord
    */
   protected function getCloudflareRecord(Info $pleskRecord) {
     if ($pleskRecord->type == 'A' || $pleskRecord->type == 'AAAA' || $pleskRecord->type == 'CNAME') {
@@ -91,7 +91,7 @@ abstract class DNSUtilBase
 
   /**
    * @param Info $pleskRecord
-   * @param CloudflareRecord $cloudflareRecord
+   * @param Modules_CloudflareDnsSync_CloudflareRecord $cloudflareRecord
    * @return bool
    */
   protected function doRecordsMatch(Info $pleskRecord, $cloudflareRecord) {
@@ -102,7 +102,7 @@ abstract class DNSUtilBase
         //The value of the (sub)domain
         if ($this->removeDotAfterTLD($pleskRecord->value) == $cloudflareRecord->content) {
           //Check for the domain settings (Cloudflare Traffic)
-          if (DomainSettingsHelper::useCloudflareProxy($pleskRecord->siteId) == $cloudflareRecord->proxied) {
+          if (Modules_CloudflareDnsSync_DomainSettingsHelper::useCloudflareProxy($pleskRecord->siteId) == $cloudflareRecord->proxied) {
             //If all of this is true, then the domains match
             return true;
           }

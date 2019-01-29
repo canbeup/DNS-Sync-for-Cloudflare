@@ -3,7 +3,7 @@
 class IndexController extends pm_Controller_Action
 {
   /**
-   * @var $cloudflare Cloudflare|bool
+   * @var $cloudflare Modules_CloudflareDnsSync_Cloudflare|bool
    */
   private $cloudflare;
 
@@ -26,9 +26,9 @@ class IndexController extends pm_Controller_Action
         )
     );
 
-    $this->cloudflare = Cloudflare::login(
-        pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_EMAIL)),
-        pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_API_KEY))
+    $this->cloudflare = Modules_CloudflareDnsSync_Cloudflare::login(
+        pm_Settings::getDecrypted(Modules_CloudflareDnsSync_SettingsUtil::getUserKey(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_EMAIL)),
+        pm_Settings::getDecrypted(Modules_CloudflareDnsSync_SettingsUtil::getUserKey(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_API_KEY))
     );
   }
 
@@ -52,17 +52,17 @@ class IndexController extends pm_Controller_Action
   {
     //Create a new Form
     $form = new pm_Form_Simple();
-    $form->addElement('Text', SettingsUtil::CLOUDFLARE_EMAIL, array(
+    $form->addElement('Text', Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_EMAIL, array(
         'label' => 'Cloudflare Email',
-        'value' => pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_EMAIL)),
+        'value' => pm_Settings::getDecrypted(Modules_CloudflareDnsSync_SettingsUtil::getUserKey(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_EMAIL)),
         'required' => true,
         'validator' => array(
             array('EmailAddress', true)
         )
     ));
-    $form->addElement('Text', SettingsUtil::CLOUDFLARE_API_KEY, array(
+    $form->addElement('Text', Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_API_KEY, array(
         'label' => 'Cloudflare API Key',
-        'value' => pm_Settings::getDecrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_API_KEY)),
+        'value' => pm_Settings::getDecrypted(Modules_CloudflareDnsSync_SettingsUtil::getUserKey(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_API_KEY)),
         'required' => true,
         'validator' => array(
             array('NotEmpty', true)
@@ -74,8 +74,8 @@ class IndexController extends pm_Controller_Action
     ));
 
     if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
-      pm_Settings::setEncrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_EMAIL), $form->getValue(SettingsUtil::CLOUDFLARE_EMAIL));
-      pm_Settings::setEncrypted(SettingsUtil::getUserKey(SettingsUtil::CLOUDFLARE_API_KEY), $form->getValue(SettingsUtil::CLOUDFLARE_API_KEY));
+      pm_Settings::setEncrypted(Modules_CloudflareDnsSync_SettingsUtil::getUserKey(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_EMAIL), $form->getValue(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_EMAIL));
+      pm_Settings::setEncrypted(Modules_CloudflareDnsSync_SettingsUtil::getUserKey(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_API_KEY), $form->getValue(Modules_CloudflareDnsSync_SettingsUtil::CLOUDFLARE_API_KEY));
 
       $this->_status->addMessage('info', 'Data was successfully saved.');
       $this->_helper->json(array('redirect' => pm_Context::getBaseUrl()));
