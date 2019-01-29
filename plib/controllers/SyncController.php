@@ -1,7 +1,5 @@
 <?php
 
-include 'ClassLoader.php';
-
 use GuzzleHttp\Exception\ClientException;
 
 class SyncController extends pm_Controller_Action

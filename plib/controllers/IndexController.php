@@ -1,7 +1,5 @@
 <?php
 
-include 'ClassLoader.php';
-
 class IndexController extends pm_Controller_Action
 {
   /**
