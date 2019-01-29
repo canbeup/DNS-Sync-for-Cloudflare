@@ -66,9 +66,15 @@ abstract class DNSUtilBase
           return $cloudflareRecord;
         }
       }
-    } else if ($pleskRecord->type == 'NS' || $pleskRecord->type == 'MX') {
+    } else if ($pleskRecord->type == 'NS') {
       foreach ($this->getCloudflareRecords() as $cloudflareRecord) {
         if ($pleskRecord->type == $cloudflareRecord->type && $this->removeDotAfterTLD($pleskRecord->host) == $cloudflareRecord->name && $this->removeDotAfterTLD($pleskRecord->value) == $cloudflareRecord->content) {
+          return $cloudflareRecord;
+        }
+      }
+    } else if ($pleskRecord->type == 'MX') {
+      foreach ($this->getCloudflareRecords() as $cloudflareRecord) {
+        if ($pleskRecord->type == $cloudflareRecord->type && $this->removeDotAfterTLD($pleskRecord->host) == $cloudflareRecord->name && $pleskRecord->opt == $cloudflareRecord->priority) {
           return $cloudflareRecord;
         }
       }
