@@ -35,7 +35,7 @@ class DNSListUtil extends DNSUtilBase
 
         $data[] = array(
             'col-host' => $this->removeDotAfterTLD($pleskRecord->host),
-            'col-type' => $pleskRecord->type,
+            'col-type' => $pleskRecord->type.($pleskRecord->type == 'MX' ? ' ('.$pleskRecord->opt.')' : ''),
             'col-status' => '<img src="' . $syncStatus . '"/>',
             'col-plesk' => $pleskRecord->value,
             'col-cloudflare' => $cloudflareValue
