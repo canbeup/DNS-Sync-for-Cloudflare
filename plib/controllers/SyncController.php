@@ -55,60 +55,55 @@ class SyncController extends pm_Controller_Action
 
       $siteID = $this->getRequest()->getParam("site_id");
 
-      try {
+      if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
 
-        if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
+        $this->view->tabs[0]['active'] = true;
 
-          $this->view->tabs[0]['active'] = true;
+        try {
 
-          try {
+          $zone = $this->cloudflare->getZone($siteID);
 
-            $zone = $this->cloudflare->getZone($siteID);
+          if ($zone !== false) {
 
-            if ($zone !== false) {
+            $this->view->pageTitle = 'Cloudflare DNS Sync for <b>' . $zone->name . '</b>';
 
-              $this->view->pageTitle = 'Cloudflare DNS Sync for <b>' . $zone->name . '</b>';
+            $this->view->syncTools = [
+                [
+                    'title' => 'Sync DNS',
+                    'description' => 'Sync the Plesk DNS to Cloudflare DNS',
+                    'class' => 'sb-button1',
+                    'action' => 'domain?site_id=' . $siteID.'&sync=all',
+                ]
+            ];
 
-              $this->view->syncTools = [
-                  [
-                      'title' => 'Sync DNS',
-                      'description' => 'Sync the Plesk DNS to Cloudflare DNS',
-                      'class' => 'sb-button1',
-                      'action' => 'domain?site_id=' . $siteID . '&sync=all',
-                  ]
-              ];
+            //Check if we need to sync
+            if ($this->getRequest()->getParam('sync') != null) {
+              //Create the Sync Util
+              $dnsSyncUtil = new DNSSyncUtil($siteID, $this->cloudflare, new PleskDNS());
 
-              //Check if we need to sync
-              if ($this->getRequest()->getParam('sync') != null) {
-                //Create the Sync Util
-                $dnsSyncUtil = new DNSSyncUtil($siteID, $this->cloudflare, new PleskDNS());
+              //Check if the sync method is all
+              if ($this->getRequest()->getParam('sync') == 'all') {
+                //Sync the Plesk DNS to Cloudflare
+                $dnsSyncUtil->syncAll($this->_status);
+              //Check if the sync method is a single record
+              } elseif (is_numeric($this->getRequest()->getParam('sync'))) {
+                //Get the record ID
+                $recordID = $this->getRequest()->getParam('sync');
 
-                //Check if the sync method is all
-                if ($this->getRequest()->getParam('sync') == 'all') {
-                  //Sync the Plesk DNS to Cloudflare
-                  $dnsSyncUtil->syncAll($this->_status);
-                  //Check if the sync method is a single record
-                } elseif (is_numeric($this->getRequest()->getParam('sync'))) {
-                  //Get the record ID
-                  $recordID = $this->getRequest()->getParam('sync');
-
-                  //Sync the Plesk Record to Cloudflare
-                  $dnsSyncUtil->syncRecord($this->_status, $recordID);
-                }
+                //Sync the Plesk Record to Cloudflare
+                $dnsSyncUtil->syncRecord($this->_status, $recordID);
               }
-
-              $this->view->list = $this->_getRecordsList($siteID);
-
-            } else {
-              $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
             }
-          } catch (ClientException $exception) {
+
+            $this->view->list = $this->_getRecordsList($siteID);
+
+          } else {
             $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
           }
-        } else {
-          $this->_status->addMessage('error', 'You do not have access to this domain.');
+        } catch (ClientException $exception) {
+          $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
         }
-      } catch (pm_Exception $e) {
+      } else {
         $this->_status->addMessage('error', 'You do not have access to this domain.');
       }
     } else {
@@ -122,62 +117,60 @@ class SyncController extends pm_Controller_Action
 
       $siteID = $this->getRequest()->getParam("site_id");
 
-      try {
+      if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
 
-        if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
-
+        try {
           $this->view->pageTitle = 'Cloudflare DNS Sync for <b>' . pm_Domain::getByDomainId($siteID)->getName() . '</b>';
+        } catch (pm_Exception $e) {
+        }
 
-          $this->view->tabs[1]['active'] = true;
+        $this->view->tabs[1]['active'] = true;
 
-          //List the Type of available records
-          $recordOptions = RecordsHelper::getAvailableRecords();
+        //List the Type of available records
+        $recordOptions = RecordsHelper::getAvailableRecords();
 
-          $selectedRecords = array();
+        $selectedRecords = array();
+
+        foreach ($recordOptions as $option) {
+          if (DomainSettingsHelper::syncRecordType($option, $siteID)) {
+            array_push($selectedRecords, $option);
+          }
+        }
+
+        //Create a new Form
+        $form = new pm_Form_Simple();
+        $form->addElement('checkbox', SettingsUtil::CLOUDFLARE_PROXY, array(
+            'label' => 'Traffic thru Cloudflare',
+            'value' => DomainSettingsHelper::useCloudflareProxy($siteID),
+        ));
+        $form->addElement('multiCheckbox', SettingsUtil::CLOUDFLARE_SYNC_TYPES, array(
+            'label' => 'Select the type of records you want to sync',
+            'multiOptions' => $recordOptions,
+            'value' => $selectedRecords
+        ));
+
+        $form->addControlButtons(array(
+            'sendTitle' => 'Save',
+            'cancelLink' => pm_Context::getActionUrl('sync', 'settings?site_id=' . $siteID),
+        ));
+
+        if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
+          pm_Settings::set(SettingsUtil::getDomainKey(SettingsUtil::CLOUDFLARE_PROXY, $siteID), $form->getValue(SettingsUtil::CLOUDFLARE_PROXY));
 
           foreach ($recordOptions as $option) {
-            if (DomainSettingsHelper::syncRecordType($option, $siteID)) {
-              array_push($selectedRecords, $option);
+            try {
+              pm_Settings::set(SettingsUtil::getDomainKey('record' . $option, $siteID), in_array($option, $form->getValue(SettingsUtil::CLOUDFLARE_SYNC_TYPES)));
+            } catch (Exception $e) {
             }
           }
 
-          //Create a new Form
-          $form = new pm_Form_Simple();
-          $form->addElement('checkbox', SettingsUtil::CLOUDFLARE_PROXY, array(
-              'label' => 'Traffic thru Cloudflare',
-              'value' => DomainSettingsHelper::useCloudflareProxy($siteID),
-          ));
-          $form->addElement('multiCheckbox', SettingsUtil::CLOUDFLARE_SYNC_TYPES, array(
-              'label' => 'Select the type of records you want to sync',
-              'multiOptions' => $recordOptions,
-              'value' => $selectedRecords
-          ));
-
-          $form->addControlButtons(array(
-              'sendTitle' => 'Save',
-              'cancelLink' => pm_Context::getActionUrl('sync', 'settings?site_id=' . $siteID),
-          ));
-
-          if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
-            pm_Settings::set(SettingsUtil::getDomainKey(SettingsUtil::CLOUDFLARE_PROXY, $siteID), $form->getValue(SettingsUtil::CLOUDFLARE_PROXY));
-
-            foreach ($recordOptions as $option) {
-              try {
-                pm_Settings::set(SettingsUtil::getDomainKey('record' . $option, $siteID), in_array($option, $form->getValue(SettingsUtil::CLOUDFLARE_SYNC_TYPES)));
-              } catch (Exception $e) {
-              }
-            }
-
-            $this->_status->addMessage('info', 'Settings were successfully saved.');
-            $this->_helper->json(array('redirect' => pm_Context::getActionUrl('sync', 'domain?site_id=' . $siteID)));
-          }
-
-          $this->view->form = $form;
-
-        } else {
-          $this->_status->addMessage('error', 'You do not have access to this domain.');
+          $this->_status->addMessage('info', 'Settings were successfully saved.');
+          $this->_helper->json(array('redirect' => pm_Context::getActionUrl('sync', 'domain?site_id=' . $siteID)));
         }
-      } catch (pm_Exception $exception) {
+
+        $this->view->form = $form;
+
+      } else {
         $this->_status->addMessage('error', 'You do not have access to this domain.');
       }
     } else {
