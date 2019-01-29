@@ -23,4 +23,13 @@ class PleskDNS
     return $this->client->dns()->getAll("site-id", $siteID);
   }
 
+  /**
+   * @param $recordID
+   * @return Info
+   */
+  public function getRecord($recordID)
+  {
+    return $this->client->dns()->get('id', $recordID);
+  }
+
 }
