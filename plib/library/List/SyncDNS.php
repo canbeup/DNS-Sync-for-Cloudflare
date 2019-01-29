@@ -1,10 +1,6 @@
 <?php
 
-require_once 'DNSUtilBase.php';
-
-use PleskX\Api\Struct\Dns\Info;
-
-class Modules_CloudflareDnsSync_ModulesCloudflareDnsSync_DNSListUtil extends Modules_CloudflareDnsSync_DNSUtilBase
+class Modules_CloudflareDnsSync_List_SyncDNS extends Modules_CloudflareDnsSync_Util_BaseDNS
 {
   public function __construct($siteID, Modules_CloudflareDnsSync_Cloudflare $cloudflare, Modules_CloudflareDnsSync_PleskDNS $pleskDNS)
   {
@@ -18,7 +14,7 @@ class Modules_CloudflareDnsSync_ModulesCloudflareDnsSync_DNSListUtil extends Mod
 
     foreach ($this->getPleskRecords() as $pleskRecord) {
 
-      if (in_array($pleskRecord->type, Modules_CloudflareDnsSync_RecordsHelper::getAvailableRecords())) {
+      if (in_array($pleskRecord->type, Modules_CloudflareDnsSync_Helper_Records::getAvailableRecords())) {
 
         $cloudflareRecord = $this->getCloudflareRecord($pleskRecord);
 

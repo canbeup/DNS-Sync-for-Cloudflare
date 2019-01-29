@@ -1,6 +1,6 @@
 <?php
 
-class Modules_CloudflareDnsSync_SettingsUtil
+class Modules_CloudflareDnsSync_Util_Settings
 {
   const CLOUDFLARE_EMAIL = 'cloudflareEmail';
   const CLOUDFLARE_API_KEY = 'cloudflareApiKey';

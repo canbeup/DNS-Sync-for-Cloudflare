@@ -1,6 +1,6 @@
 <?php
 
-class Modules_CloudflareDnsSync_CloudflareRecord
+class Modules_CloudflareDnsSync_Helper_CloudflareRecord
 {
   public $id;
   public $type;

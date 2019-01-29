@@ -2,7 +2,7 @@
 
 use PleskX\Api\Struct\Dns\Info;
 
-abstract class Modules_CloudflareDnsSync_DNSUtilBase
+abstract class Modules_CloudflareDnsSync_Util_BaseDNS
 {
   protected $cloudflare;
   protected $pleskDNS;
@@ -40,7 +40,7 @@ abstract class Modules_CloudflareDnsSync_DNSUtilBase
   }
 
   /**
-   * @return Modules_CloudflareDnsSync_CloudflareRecord[]
+   * @return Modules_CloudflareDnsSync_Helper_CloudflareRecord[]
    */
   public function getCloudflareRecords(): array
   {
@@ -57,7 +57,7 @@ abstract class Modules_CloudflareDnsSync_DNSUtilBase
 
   /**
    * @param Info $pleskRecord
-   * @return bool|Modules_CloudflareDnsSync_CloudflareRecord
+   * @return bool|Modules_CloudflareDnsSync_Helper_CloudflareRecord
    */
   protected function getCloudflareRecord(Info $pleskRecord) {
     if ($pleskRecord->type == 'A' || $pleskRecord->type == 'AAAA' || $pleskRecord->type == 'CNAME') {
@@ -91,7 +91,7 @@ abstract class Modules_CloudflareDnsSync_DNSUtilBase
 
   /**
    * @param Info $pleskRecord
-   * @param Modules_CloudflareDnsSync_CloudflareRecord $cloudflareRecord
+   * @param Modules_CloudflareDnsSync_Helper_CloudflareRecord $cloudflareRecord
    * @return bool
    */
   protected function doRecordsMatch(Info $pleskRecord, $cloudflareRecord) {
@@ -102,7 +102,7 @@ abstract class Modules_CloudflareDnsSync_DNSUtilBase
         //The value of the (sub)domain
         if ($this->removeDotAfterTLD($pleskRecord->value) == $cloudflareRecord->content) {
           //Check for the domain settings (Cloudflare Traffic)
-          if (Modules_CloudflareDnsSync_DomainSettingsHelper::useCloudflareProxy($pleskRecord->siteId) == $cloudflareRecord->proxied) {
+          if (Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($pleskRecord->siteId) == $cloudflareRecord->proxied) {
             //If all of this is true, then the domains match
             return true;
           }

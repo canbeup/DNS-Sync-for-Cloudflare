@@ -3,9 +3,7 @@
 use Cloudflare\API\Endpoints\DNS;
 use PleskX\Api\Struct\Dns\Info;
 
-require_once 'DNSUtilBase.php';
-
-class Modules_CloudflareDnsSync_DNSSyncUtil extends Modules_CloudflareDnsSync_DNSUtilBase
+class Modules_CloudflareDnsSync_Util_SyncDNS extends Modules_CloudflareDnsSync_Util_BaseDNS
 {
   /**
    * DNSSyncUtil constructor.
@@ -34,7 +32,7 @@ class Modules_CloudflareDnsSync_DNSSyncUtil extends Modules_CloudflareDnsSync_DN
 
     foreach ($this->getPleskRecords() as $pleskRecord) {
 
-      if (Modules_CloudflareDnsSync_DomainSettingsHelper::syncRecordType($pleskRecord->type, $this->siteID)) {
+      if (Modules_CloudflareDnsSync_Helper_DomainSettings::syncRecordType($pleskRecord->type, $this->siteID)) {
 
         $this->sync($pleskRecord, $cloudflareDNS, $recordsUpdated, $recordsCreated);
 
@@ -60,7 +58,7 @@ class Modules_CloudflareDnsSync_DNSSyncUtil extends Modules_CloudflareDnsSync_DN
 
     $pleskRecord = $this->pleskDNS->getRecord($recordID);
 
-    if ($pleskRecord !== false && Modules_CloudflareDnsSync_DomainSettingsHelper::syncRecordType($pleskRecord->type, $this->siteID)) {
+    if ($pleskRecord !== false && Modules_CloudflareDnsSync_Helper_DomainSettings::syncRecordType($pleskRecord->type, $this->siteID)) {
 
       $this->sync($pleskRecord, $cloudflareDNS, $recordsUpdated, $recordsCreated);
 
@@ -89,7 +87,7 @@ class Modules_CloudflareDnsSync_DNSSyncUtil extends Modules_CloudflareDnsSync_DN
             'type' => $pleskRecord->type,
             'name' => $pleskRecord->host,
             'content' => $pleskRecord->value,
-            'proxied' => Modules_CloudflareDnsSync_DomainSettingsHelper::useCloudflareProxy($pleskRecord->siteId)
+            'proxied' => Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($pleskRecord->siteId)
         ));
 
         $recordsUpdated++;
@@ -101,7 +99,7 @@ class Modules_CloudflareDnsSync_DNSSyncUtil extends Modules_CloudflareDnsSync_DN
       $priority = '';
 
       if ($pleskRecord->type == 'A' || $pleskRecord->type == 'AAAA' || $pleskRecord->type == 'CNAME') {
-        $proxied = Modules_CloudflareDnsSync_DomainSettingsHelper::useCloudflareProxy($this->siteID);
+        $proxied = Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($this->siteID);
       }
 
       if ($pleskRecord->type == 'MX') {
