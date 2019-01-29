@@ -122,7 +122,7 @@ class DNSSyncUtil extends DNSUtilBase
    */
   private function addMessage(pm_View_Status $view_Status, $recordsCreated, $recordsUpdated) {
     if ($recordsUpdated == 0 && $recordsCreated == 0) {
-      $view_Status->addMessage('error', 'No records created of updated.');
+      $view_Status->addMessage('warning', 'No records created of updated.');
       return;
     }
 
