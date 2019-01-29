@@ -14,6 +14,8 @@ class DNSListUtil extends DNSUtilBase
   public function getList() {
     $data = array();
 
+    $cloudflareList = $this->getCloudflareRecords();
+
     foreach ($this->getPleskRecords() as $pleskRecord) {
 
       if (in_array($pleskRecord->type, RecordsHelper::getAvailableRecords())) {
@@ -31,6 +33,13 @@ class DNSListUtil extends DNSUtilBase
           } else {
             $syncStatus = pm_Context::getBaseUrl() . 'images/warning.png';
           }
+
+          foreach ($cloudflareList as $key => $value) {
+            if ($value->id == $cloudflareRecord->id) {
+              unset($cloudflareList[$key]);
+              break;
+            }
+          }
         }
 
         $data[] = array(
@@ -38,14 +47,31 @@ class DNSListUtil extends DNSUtilBase
             'col-type' => $pleskRecord->type.($pleskRecord->type == 'MX' ? ' ('.$pleskRecord->opt.')' : ''),
             'col-status' => '<img src="' . $syncStatus . '"/>',
             'col-plesk' => $pleskRecord->value,
-            'col-cloudflare' => $cloudflareValue
+            'col-cloudflare' => $this->minifyValue($cloudflareValue)
         );
 
       }
 
     }
 
+    foreach ($cloudflareList as $cloudflareRecord) {
+      $data[] = array(
+          'col-host' => $this->removeDotAfterTLD($cloudflareRecord->name),
+          'col-type' => $cloudflareRecord->type.($cloudflareRecord->type == 'MX' ? ' ('.$cloudflareRecord->priority.')' : ''),
+          'col-status' => '<img src="' . pm_Context::getBaseUrl() . 'images/error2.png"/>',
+          'col-plesk' => 'Record not found',
+          'col-cloudflare' => $this->minifyValue($cloudflareRecord->content)
+      );
+    }
+
     return $data;
+  }
+
+  private function minifyValue($value) {
+    if (strlen($value) > 100) {
+      return substr($value, 0, 100).'...';
+    }
+    return $value;
   }
 
 }
