@@ -72,7 +72,7 @@ class SyncController extends pm_Controller_Action
                     'title' => 'Sync DNS',
                     'description' => 'Sync the Plesk DNS to Cloudflare DNS',
                     'class' => 'sb-button1',
-                    'action' => 'domain?site_id=' . $siteID.'&sync=true',
+                    'action' => 'domain?site_id=' . $siteID.'&sync=all',
                 ]
             ];
 
