@@ -31,7 +31,7 @@ class DNSSyncUtil extends DNSUtilBase
                 'type' => $pleskRecord->type,
                 'name' => $pleskRecord->host,
                 'content' => $pleskRecord->value,
-                'porxied' => DomainSettingsHelper::useCloudflareProxy($pleskRecord->siteId)
+                'proxied' => DomainSettingsHelper::useCloudflareProxy($pleskRecord->siteId)
             ));
 
             $recordsUpdated++;
