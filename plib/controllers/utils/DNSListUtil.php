@@ -24,6 +24,7 @@ class DNSListUtil extends DNSUtilBase
 
         $cloudflareValue = 'Record not found';
         $syncStatus = pm_Context::getBaseUrl() . 'images/error.png';
+        $proxyStatus = pm_Context::getBaseUrl() . 'images/cloudflare/dns_only.png';
 
         if ($cloudflareRecord !== false) {
           $cloudflareValue = $cloudflareRecord->content;
@@ -32,6 +33,10 @@ class DNSListUtil extends DNSUtilBase
             $syncStatus = pm_Context::getBaseUrl() . 'images/success.png';
           } else {
             $syncStatus = pm_Context::getBaseUrl() . 'images/warning.png';
+          }
+
+          if ($cloudflareRecord->proxied) {
+            $proxyStatus = pm_Context::getBaseUrl() . 'images/cloudflare/thru_cloudflare.png';
           }
 
           foreach ($cloudflareList as $key => $value) {
@@ -47,7 +52,8 @@ class DNSListUtil extends DNSUtilBase
             'col-type' => $pleskRecord->type.($pleskRecord->type == 'MX' ? ' ('.$pleskRecord->opt.')' : ''),
             'col-status' => '<img src="' . $syncStatus . '"/>',
             'col-plesk' => $this->minifyValue($pleskRecord->value),
-            'col-cloudflare' => $this->minifyValue($cloudflareValue)
+            'col-cloudflare' => $this->minifyValue($cloudflareValue),
+            'col-cloudflare-proxy' => '<img src="' . $proxyStatus . '"/>',
         );
 
       }
