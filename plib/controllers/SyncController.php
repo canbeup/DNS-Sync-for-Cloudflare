@@ -76,11 +76,13 @@ class SyncController extends pm_Controller_Action
                 ]
             ];
 
-            if ($this->getRequest()->getParam('sync') == 'true') {
+            if ($this->getRequest()->getParam('sync') == 'all') {
               //Sync the Plesk DNS to Cloudflare
               $dnsSyncUtil = new DNSSyncUtil($siteID, $this->cloudflare, new PleskDNS());
 
               $dnsSyncUtil->syncAll($this->_status);
+            } elseif (is_numeric($this->getRequest()->getParam('sync'))) {
+              $recordID = $this->getRequest()->getParam('sync');
             }
 
             $this->view->list = $this->_getRecordsList($siteID);
