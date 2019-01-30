@@ -6,8 +6,8 @@
   <category>dns</category>
   <category>server_tool</category>
   <category>performance</category>
-  <version>0.1.1</version>
-  <release>2</release>
+  <version>0.2</version>
+  <release>1</release>
   <vendor>Sander Jochems</vendor>
   <url>https://www.sanderjochems.com/</url>
   <plesk_min_version>17</plesk_min_version>
