@@ -13,7 +13,7 @@ class Modules_CloudflareDnsSync_CustomButtons extends pm_Hook_CustomButtons
         'title' => 'Cloudflare DNS Sync',
         'description' => 'Sync your Plesk DNS zone to Cloudflare',
         'icon' => pm_Context::getBaseUrl() . '/images/logo.png',
-        'link' => pm_Context::getActionUrl('index'),
+        'link' => pm_Context::getActionUrl('index', 'domains'),
     ];
 
     return [
