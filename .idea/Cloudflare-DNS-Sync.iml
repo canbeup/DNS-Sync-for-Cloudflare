@@ -2,10 +2,10 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/modules/cloudflare-dns-sync/library" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/plib/library/Composer" isTestSource="false" packagePrefix="PleskExt\Composer\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/cloudflare_dns_sync/library" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/cloudflare-dns-sync/library/Composer" isTestSource="false" packagePrefix="PleskExt\Composer\" />
       <sourceFolder url="file://$MODULE_DIR$/plib/library" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/cloudflare_dns_sync/library/Composer" isTestSource="false" packagePrefix="PleskExt\Composer\" />
       <excludeFolder url="file://$MODULE_DIR$/plib/vendor/cloudflare/sdk" />
       <excludeFolder url="file://$MODULE_DIR$/plib/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/plib/vendor/guzzlehttp/guzzle" />
