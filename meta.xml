@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-  <id>cloudflare_dns_sync</id>
+  <id>cloudflare-dns-sync</id>
   <name>DNS Sync for Cloudflare</name>
   <description>Sync your Plesk DNS records with Cloudflare DNS records. This extension will use Plesk as the master DNS server. Cloudflare records will be overwitten, not deleted.</description>
   <category>dns</category>

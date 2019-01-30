@@ -5,13 +5,13 @@
   "autoload":{
     "psr-0": {
       "Composer_": [
-        "modules/cloudflare_dns_sync/library/",
+        "modules/cloudflare-dns-sync/library/",
         "plib/library/"
       ]
     },
     "psr-4": {
         "PleskExt\\Composer\\": [
-            "modules/cloudflare_dns_sync/library/Composer/",
+            "modules/cloudflare-dns-sync/library/Composer/",
             "plib/library/Composer/"
         ]
     }
