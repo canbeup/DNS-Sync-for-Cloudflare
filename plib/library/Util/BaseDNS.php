@@ -125,7 +125,7 @@ abstract class Modules_CloudflareDnsSync_Util_BaseDNS
     return $domain;
   }
 
-  private function endsWith($string, $endString)
+  protected function endsWith($string, $endString)
   {
     $len = strlen($endString);
     if ($len == 0) {
