@@ -30,21 +30,33 @@ class IndexController extends pm_Controller_Action
         pm_Settings::getDecrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL)),
         pm_Settings::getDecrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY))
     );
+
+    if ($this->cloudflare == false) {
+      $this->view->tabs = null;
+    }
   }
 
   public function indexAction()
   {
-    $this->forward('domains');
+    if ($this->cloudflare !== false) {
+      $this->forward('domains');
+    } else {
+      $this->forward('api');
+    }
   }
 
   public function domainsAction()
   {
-    try {
-      $list = $this->_getDomainList();
+    if ($this->cloudflare !== false) {
+      try {
+        $list = $this->_getDomainList();
 
-      $this->view->list = $list;
-    } catch (GuzzleHttp\Exception\ClientException $exception) {
-      $this->view->error = "Could not connect to Cloudflare";
+        $this->view->list = $list;
+      } catch (GuzzleHttp\Exception\ClientException $exception) {
+        $this->view->error = "Could not connect to Cloudflare";
+      }
+    } else {
+      $this->forward('api');
     }
   }
 
@@ -86,9 +98,11 @@ class IndexController extends pm_Controller_Action
 
   public function domainDataAction()
   {
-    $list = $this->_getDomainList();
-    // Json data from pm_View_List_Simple
-    $this->_helper->json($list->fetchData());
+    if ($this->cloudflare !== false) {
+      $list = $this->_getDomainList();
+      // Json data from pm_View_List_Simple
+      $this->_helper->json($list->fetchData());
+    }
   }
 
   private function _getDomainList()
@@ -127,5 +141,6 @@ class IndexController extends pm_Controller_Action
     ));
     $list->setDataUrl(array('action' => 'domain-data'));
     return $list;
+
   }
 }
