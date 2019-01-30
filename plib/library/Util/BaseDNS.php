@@ -117,11 +117,20 @@ abstract class Modules_CloudflareDnsSync_Util_BaseDNS
    * @return string
    */
   protected function removeDotAfterTLD($domain) {
-    if (endsWith($domain, '.')) {
+    if ($this->endsWith($domain, '.')) {
       if (strlen($domain) > 1) {
         return substr($domain, 0, strlen($domain) - 1);
       }
     }
     return $domain;
+  }
+
+  private function endsWith($string, $endString)
+  {
+    $len = strlen($endString);
+    if ($len == 0) {
+      return true;
+    }
+    return (substr($string, -$len) === $endString);
   }
 }
