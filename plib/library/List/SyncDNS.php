@@ -26,7 +26,7 @@ class Modules_CloudflareDnsSync_List_SyncDNS extends Modules_CloudflareDnsSync_U
           $cloudflareValue = $cloudflareRecord->content;
 
           if ($pleskRecord->type == 'SRV') {
-            $cloudflareValue = $cloudflareRecord->priority . ' ' . $cloudflareRecord->content;
+            $cloudflareValue = $cloudflareRecord->priority . ' ' . str_replace("\t",' ',$cloudflareRecord->content);
             $pleskValue = $pleskRecord->opt . ' ' . $pleskRecord->value;
           }
 

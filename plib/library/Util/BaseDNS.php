@@ -107,7 +107,7 @@ abstract class Modules_CloudflareDnsSync_Util_BaseDNS
       if ($this->removeDotAfterTLD($pleskRecord->host) == $cloudflareRecord->name) {
         //The value of the (sub)domain
         if ($pleskRecord->type == 'SRV') {
-          $cloudflareValue = $cloudflareRecord->priority . ' ' . $cloudflareRecord->content;
+          $cloudflareValue = $cloudflareRecord->priority . ' ' . str_replace("\t",' ',$cloudflareRecord->content);
           $pleskValue = $pleskRecord->opt . ' ' . $pleskRecord->value;
           if ($this->removeDotAfterTLD($pleskValue) == $cloudflareValue) {
             return true;
