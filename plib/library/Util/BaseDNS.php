@@ -85,6 +85,12 @@ abstract class Modules_CloudflareDnsSync_Util_BaseDNS
           return $cloudflareRecord;
         }
       }
+    } elseif ($pleskRecord->type == 'SRV') {
+      foreach ($this->getCloudflareRecords() as $cloudflareRecord) {
+        if ($pleskRecord->type == $cloudflareRecord->type && $this->removeDotAfterTLD($pleskRecord->host) == $cloudflareRecord->name) {
+          return $cloudflareRecord;
+        }
+      }
     }
     return false;
   }

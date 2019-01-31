@@ -2,6 +2,9 @@
 
 class Modules_CloudflareDnsSync_Helper_Records
 {
+  /**
+   * @return array
+   */
   public static function getAvailableRecords() {
     return array(
         'A' => 'A',
@@ -10,6 +13,7 @@ class Modules_CloudflareDnsSync_Helper_Records
         'TXT' => 'TXT',
         'NS' => 'NS',
         'MX' => 'MX',
+        'SRV' => 'SRV',
     );
   }
 
