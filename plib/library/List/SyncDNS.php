@@ -19,10 +19,16 @@ class Modules_CloudflareDnsSync_List_SyncDNS extends Modules_CloudflareDnsSync_U
         $cloudflareRecord = $this->getCloudflareRecord($pleskRecord);
 
         $cloudflareValue = 'Record not found';
+        $pleskValue = $pleskRecord->value;
         $syncStatus = pm_Context::getBaseUrl() . 'images/error.png';
 
         if ($cloudflareRecord !== false) {
           $cloudflareValue = $cloudflareRecord->content;
+
+          if ($pleskRecord->type == 'SRV') {
+            $cloudflareValue = $cloudflareRecord->priority . ' ' . $cloudflareRecord->content;
+            $pleskValue = $pleskRecord->opt . ' ' . $pleskRecord->value;
+          }
 
           if ($this->doRecordsMatch($pleskRecord, $cloudflareRecord)) {
             $syncStatus = pm_Context::getBaseUrl() . 'images/success.png';
@@ -42,7 +48,7 @@ class Modules_CloudflareDnsSync_List_SyncDNS extends Modules_CloudflareDnsSync_U
             'col-host' => $this->removeDotAfterTLD($pleskRecord->host),
             'col-type' => $pleskRecord->type.($pleskRecord->type == 'MX' ? ' ('.$pleskRecord->opt.')' : ''),
             'col-status' => '<img src="' . $syncStatus . '"/>',
-            'col-plesk' => $this->minifyValue($pleskRecord->value),
+            'col-plesk' => $this->minifyValue($pleskValue),
             'col-cloudflare' => $this->minifyValue($cloudflareValue),
         );
 
