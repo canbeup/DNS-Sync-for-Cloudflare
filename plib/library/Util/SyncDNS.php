@@ -78,32 +78,28 @@ class Modules_CloudflareDnsSync_Util_SyncDNS extends Modules_CloudflareDnsSync_U
     //Get the cooresponding cloudflare record
     $cloudflareRecord = $this->getCloudflareRecord($pleskRecord);
 
+    $syncRecord = new Modules_CloudflareDnsSync_Helper_SyncRecord($pleskRecord);
+
     //Check if the record exists
     if ($cloudflareRecord !== false) {
       //If so, then check if the records need to be updated
       if (!$this->doRecordsMatch($pleskRecord, $cloudflareRecord)) {
         //If so, then update the record in Cloudflare
         $cloudflareDNS->updateRecordDetails($this->zoneID, $cloudflareRecord->id, array(
-            'type' => $pleskRecord->type,
-            'name' => $pleskRecord->host,
-            'content' => $pleskRecord->value,
-            'proxied' => Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($pleskRecord->siteId, $pleskRecord->type)
+            'type' => $syncRecord->type,
+            'name' => $syncRecord->host,
+            'content' => $syncRecord->value,
+            'proxied' => $syncRecord->proxied,
+            'priority' => $syncRecord->priority
         ));
-
+        //If the updating of the record was successful, then add 1 to the updated records count
         $recordsUpdated++;
       }
 
     } else {
       //If not, then create a new record
-      $proxied = Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($this->siteID, $pleskRecord->type);
-      $priority = '';
-
-      if ($pleskRecord->type == 'MX') {
-        $priority = $pleskRecord->opt;
-      }
-
-      //Create a new record in cloudflare
-      if ($cloudflareDNS->addRecord($this->zoneID, $pleskRecord->type, $pleskRecord->host, $pleskRecord->value, 0, $proxied, $priority) === true) {
+      if ($cloudflareDNS->addRecord($this->zoneID, $syncRecord->type, $syncRecord->host, $syncRecord->value,0, $syncRecord->proxied, $syncRecord->priority) === true) {
+        //If the creating of the record was successful, then add 1 to the created records count
         $recordsCreated++;
       }
     }
