@@ -87,7 +87,7 @@ class Modules_CloudflareDnsSync_Util_SyncDNS extends Modules_CloudflareDnsSync_U
             'type' => $pleskRecord->type,
             'name' => $pleskRecord->host,
             'content' => $pleskRecord->value,
-            'proxied' => Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($pleskRecord->siteId)
+            'proxied' => Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($pleskRecord->siteId, $pleskRecord->type)
         ));
 
         $recordsUpdated++;
@@ -95,12 +95,8 @@ class Modules_CloudflareDnsSync_Util_SyncDNS extends Modules_CloudflareDnsSync_U
 
     } else {
       //If not, then create a new record
-      $proxied = false;
+      $proxied = Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($this->siteID, $pleskRecord->type);
       $priority = '';
-
-      if ($pleskRecord->type == 'A' || $pleskRecord->type == 'AAAA' || $pleskRecord->type == 'CNAME') {
-        $proxied = Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($this->siteID);
-      }
 
       if ($pleskRecord->type == 'MX') {
         $priority = $pleskRecord->opt;

@@ -6,8 +6,14 @@ class Modules_CloudflareDnsSync_Helper_DomainSettings
    * @param $siteID
    * @return bool
    */
-  public static function useCloudflareProxy($siteID) {
-    return pm_Settings::get(Modules_CloudflareDnsSync_Util_Settings::getDomainKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_PROXY, $siteID), true);
+  public static function useCloudflareProxy($siteID, $recordType = 'A') {
+    switch ($recordType) {
+      case 'A':
+      case 'AAAA':
+      case 'CNAME':
+        return pm_Settings::get(Modules_CloudflareDnsSync_Util_Settings::getDomainKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_PROXY, $siteID), true);
+    }
+    return false;
   }
 
   public static function syncRecordType($recordType, $siteID = null) {
