@@ -106,11 +106,19 @@ abstract class Modules_CloudflareDnsSync_Util_BaseDNS
       //The Domain name (sub.domain.tld)
       if ($this->removeDotAfterTLD($pleskRecord->host) == $cloudflareRecord->name) {
         //The value of the (sub)domain
-        if ($this->removeDotAfterTLD($pleskRecord->value) == $cloudflareRecord->content) {
-          //Check for the domain settings (Cloudflare Traffic)
-          if (Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($pleskRecord->siteId) == $cloudflareRecord->proxied) {
-            //If all of this is true, then the domains match
+        if ($pleskRecord->type == 'SRV') {
+          $cloudflareValue = $cloudflareRecord->priority . ' ' . $cloudflareRecord->content;
+          $pleskValue = $pleskRecord->opt . ' ' . $pleskRecord->value;
+          if ($this->removeDotAfterTLD($pleskValue) == $cloudflareValue) {
             return true;
+          }
+        } else {
+          if ($this->removeDotAfterTLD($pleskRecord->value) == $cloudflareRecord->content) {
+            //Check for the domain settings (Cloudflare Traffic)
+            if (Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($pleskRecord->siteId, $pleskRecord->type) == $cloudflareRecord->proxied) {
+              //If all of this is true, then the domains match
+              return true;
+            }
           }
         }
       }
