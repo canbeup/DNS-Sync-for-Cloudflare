@@ -76,20 +76,26 @@ class SyncController extends pm_Controller_Action
 
             //Check if we need to sync
             if ($this->getRequest()->getParam('sync') != null) {
-              //Create the Sync Util
-              $dnsSyncUtil = new Modules_CloudflareDnsSync_Util_SyncDNS($siteID, $this->cloudflare, new Modules_CloudflareDnsSync_PleskDNS());
+              try {
+                //Create the Sync Util
+                $dnsSyncUtil = new Modules_CloudflareDnsSync_Util_SyncDNS($siteID, $this->cloudflare, new Modules_CloudflareDnsSync_PleskDNS());
 
-              //Check if the sync method is all
-              if ($this->getRequest()->getParam('sync') == 'all') {
-                //Sync the Plesk DNS to Cloudflare
-                $dnsSyncUtil->syncAll($this->_status);
-              //Check if the sync method is a single record
-              } elseif (is_numeric($this->getRequest()->getParam('sync'))) {
-                //Get the record ID
-                $recordID = $this->getRequest()->getParam('sync');
+                //Check if the sync method is all
+                if ($this->getRequest()->getParam('sync') == 'all') {
+                  //Sync the Plesk DNS to Cloudflare
+                  $dnsSyncUtil->syncAll($this->_status);
+                  //Check if the sync method is a single record
+                } elseif (is_numeric($this->getRequest()->getParam('sync'))) {
+                  //Get the record ID
+                  $recordID = $this->getRequest()->getParam('sync');
 
-                //Sync the Plesk Record to Cloudflare
-                $dnsSyncUtil->syncRecord($this->_status, $recordID);
+                  //Sync the Plesk Record to Cloudflare
+                  $dnsSyncUtil->syncRecord($this->_status, $recordID);
+                }
+              } catch (ClientException $exception) {
+                $this->_status->addMessage('error', 'Could not sync the Plesk DNS zone to Cloudflare.');
+                $this->_status->addMessage('warning', $exception->getMessage());
+                $this->_status->addMessage('warning', $exception->getTraceAsString());
               }
             }
 
