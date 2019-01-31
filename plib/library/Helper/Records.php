@@ -12,4 +12,18 @@ class Modules_CloudflareDnsSync_Helper_Records
         'MX' => 'MX',
     );
   }
+
+  /**
+   * @param $type
+   * @return bool
+   */
+  public static function canUseProxy($type) {
+    switch ($type) {
+      case 'A':
+      case 'AAAA':
+      case 'CNAME':
+        return true;
+    }
+    return false;
+  }
 }
