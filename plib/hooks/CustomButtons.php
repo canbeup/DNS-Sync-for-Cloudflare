@@ -10,8 +10,8 @@ class Modules_CloudflareDnsSync_CustomButtons extends pm_Hook_CustomButtons
     }
 
     $commonParmas = [
-        'title' => 'Cloudflare DNS Sync',
-        'description' => 'Sync your Plesk DNS zone to Cloudflare',
+        'title' => pm_Locale::lmsg('title'),
+        'description' => pm_Locale::lmsg('description'),
         'icon' => pm_Context::getBaseUrl() . '/images/logo.png',
         'link' => pm_Context::getActionUrl('index', 'domains'),
     ];

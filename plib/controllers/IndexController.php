@@ -17,11 +17,11 @@ class IndexController extends pm_Controller_Action
     // Init tabs for all actions
     $this->view->tabs = array(
         array(
-            'title' => 'Domains',
+            'title' => pm_Locale::lmsg('tab.domains'),
             'action' => 'domains',
         ),
         array(
-            'title' => 'API',
+            'title' => pm_Locale::lmsg('tab.api'),
             'action' => 'api',
         )
     );
@@ -53,7 +53,7 @@ class IndexController extends pm_Controller_Action
 
         $this->view->list = $list;
       } catch (GuzzleHttp\Exception\ClientException $exception) {
-        $this->view->error = "Could not connect to Cloudflare";
+        $this->view->error = pm_Locale::lmsg('message.noConnection');
       }
     } else {
       $this->forward('api');
@@ -65,7 +65,7 @@ class IndexController extends pm_Controller_Action
     //Create a new Form
     $form = new pm_Form_Simple();
     $form->addElement('Text', Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL, array(
-        'label' => 'Cloudflare Email',
+        'label' => pm_Locale::lmsg('form.cloudflareEmail'),
         'value' => pm_Settings::getDecrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL)),
         'required' => true,
         'validator' => array(
@@ -73,7 +73,7 @@ class IndexController extends pm_Controller_Action
         )
     ));
     $form->addElement('Text', Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY, array(
-        'label' => 'Cloudflare API Key',
+        'label' => pm_Locale::lmsg('form.cloudflareApiKey'),
         'value' => pm_Settings::getDecrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY)),
         'required' => true,
         'validator' => array(
@@ -89,7 +89,7 @@ class IndexController extends pm_Controller_Action
       pm_Settings::setEncrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL), $form->getValue(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL));
       pm_Settings::setEncrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY), $form->getValue(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY));
 
-      $this->_status->addMessage('info', 'Data was successfully saved.');
+      $this->_status->addMessage('info', pm_Locale::lmsg('message.apiSaved'));
       $this->_helper->json(array('redirect' => pm_Context::getBaseUrl()));
     }
 
@@ -114,7 +114,7 @@ class IndexController extends pm_Controller_Action
      * @var $domain pm_Domain
      */
     foreach (pm_Session::getCurrentDomains(true) as $domain) {
-      $cloudflareID = "Zone ID not found";
+      $cloudflareID = pm_Locale::lmsg('text.zoneIdNotFound');
       foreach ($zones->listZones()->result as $zone) {
         if ($zone->name == $domain->getName()) {
           $cloudflareID = $zone->id;
@@ -131,11 +131,11 @@ class IndexController extends pm_Controller_Action
     $list->setData($data);
     $list->setColumns(array(
         'col-domain' => array(
-            'title' => 'Domain Name',
+            'title' => pm_Locale::lmsg('table.domainName'),
             'noEscape' => true,
         ),
         'col-zone' => array(
-            'title' => 'Cloudflare Zone ID',
+            'title' => pm_Locale::lmsg('table.cloudflareZoneID'),
             'noEscape' => true,
         )
     ));

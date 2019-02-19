@@ -23,12 +23,12 @@ class SyncController extends pm_Controller_Action
       // Init tabs for all actions
       $this->view->tabs = array(
           array(
-              'title' => 'DNS',
+              'title' => pm_Locale::lmsg('tab.dns'),
               'action' => 'domain',
               'link' => 'domain?site_id='.$siteID,
           ),
           array(
-              'title' => 'Settings',
+              'title' => pm_Locale::lmsg('tab.settings'),
               'action' => 'settings',
               'link' => 'settings?site_id='.$siteID,
           )
@@ -63,12 +63,12 @@ class SyncController extends pm_Controller_Action
 
           if ($zone !== false) {
 
-            $this->view->pageTitle = 'Cloudflare DNS Sync for <b>' . $zone->name . '</b>';
+            $this->view->pageTitle = pm_Locale::lmsg('title.cloudflareSyncFor', ['domain' => $zone->name]);
 
             $this->view->syncTools = [
                 [
-                    'title' => 'Sync DNS',
-                    'description' => 'Sync the Plesk DNS to Cloudflare DNS',
+                    'title' => pm_Locale::lmsg('button.syncDNS'),
+                    'description' => pm_Locale::lmsg('description'),
                     'class' => 'sb-button1',
                     'action' => 'domain?site_id=' . $siteID.'&sync=all',
                 ]
@@ -93,25 +93,23 @@ class SyncController extends pm_Controller_Action
                   $dnsSyncUtil->syncRecord($this->_status, $recordID);
                 }
               } catch (ClientException $exception) {
-                $this->_status->addMessage('error', 'Could not sync the Plesk DNS zone to Cloudflare.');
-                $this->_status->addMessage('warning', $exception->getMessage());
-                $this->_status->addMessage('warning', $exception->getTraceAsString());
+                $this->_status->addMessage('error', pm_Locale::lmsg('message.couldNotSync'));
               }
             }
 
             $this->view->list = $this->_getRecordsList($siteID);
 
           } else {
-            $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
+            $this->_status->addMessage('error', pm_Locale::lmsg('message.noCloudflareZoneFound'));
           }
         } catch (ClientException $exception) {
-          $this->_status->addMessage('error', 'Could not find a Cloudflare zone for this domain.');
+          $this->_status->addMessage('error', pm_Locale::lmsg('message.noCloudflareZoneFound'));
         }
       } else {
-        $this->_status->addMessage('error', 'You do not have access to this domain.');
+        $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessToDomain'));
       }
     } else {
-      $this->_status->addMessage('error', 'There was no domain selected.');
+      $this->_status->addMessage('error', pm_Locale::lmsg('message.noDomainSelected'));
     }
   }
 
@@ -124,7 +122,7 @@ class SyncController extends pm_Controller_Action
       if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
 
         try {
-          $this->view->pageTitle = 'Cloudflare DNS Sync for <b>' . pm_Domain::getByDomainId($siteID)->getName() . '</b>';
+          $this->view->pageTitle = pm_Locale::lmsg('title.cloudflareSyncFor', ['domain' => pm_Domain::getByDomainId($siteID)->getName()]);
         } catch (pm_Exception $e) {
         }
 
@@ -144,11 +142,11 @@ class SyncController extends pm_Controller_Action
         //Create a new Form
         $form = new pm_Form_Simple();
         $form->addElement('checkbox', Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_PROXY, array(
-            'label' => 'Traffic thru Cloudflare',
+            'label' => pm_Locale::lmsg('form.trafficThruCloudflare'),
             'value' => Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($siteID),
         ));
         $form->addElement('multiCheckbox', Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_SYNC_TYPES, array(
-            'label' => 'Select the type of records you want to sync',
+            'label' => pm_Locale::lmsg('form.selectRecord'),
             'multiOptions' => $recordOptions,
             'value' => $selectedRecords
         ));
@@ -168,17 +166,17 @@ class SyncController extends pm_Controller_Action
             }
           }
 
-          $this->_status->addMessage('info', 'Settings were successfully saved.');
+          $this->_status->addMessage('info', pm_Locale::lmsg('message.settingsSaved'));
           $this->_helper->json(array('redirect' => pm_Context::getActionUrl('sync', 'domain?site_id=' . $siteID)));
         }
 
         $this->view->form = $form;
 
       } else {
-        $this->_status->addMessage('error', 'You do not have access to this domain.');
+        $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessToDomain'));
       }
     } else {
-      $this->_status->addMessage('error', 'There was no domain selected.');
+      $this->_status->addMessage('error', pm_Locale::lmsg('message.noDomainSelected'));
     }
   }
 
@@ -201,23 +199,23 @@ class SyncController extends pm_Controller_Action
     $list->setData($data);
     $list->setColumns(array(
         'col-host' => array(
-            'title' => 'Host',
+            'title' => pm_Locale::lmsg('table.host'),
             'noEscape' => true,
         ),
         'col-type' => array(
-            'title' => 'Record type',
+            'title' => pm_Locale::lmsg('table.recordType'),
             'noEscape' => true,
         ),
         'col-status' => array(
-            'title' => 'Status',
+            'title' => pm_Locale::lmsg('table.status'),
             'noEscape' => true,
         ),
         'col-cloudflare' => array(
-            'title' => 'Cloudflare Value',
+            'title' => pm_Locale::lmsg('table.cloudflareValue'),
             'noEscape' => true,
         ),
         'col-plesk' => array(
-            'title' => 'Plesk Value',
+            'title' => pm_Locale::lmsg('table.pleskValue'),
             'noEscape' => true,
         )
     ));
