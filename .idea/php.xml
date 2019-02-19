@@ -12,6 +12,7 @@
       <path value="$PROJECT_DIR$/plib/vendor/ralouphie/getallheaders" />
       <path value="$PROJECT_DIR$/plib/vendor/guzzlehttp/guzzle" />
       <path value="$PROJECT_DIR$/plib/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/../Zend-Framework/ZendFramework-1.12.20" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7" />

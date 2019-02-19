@@ -10,6 +10,7 @@
   <release>1</release>
   <vendor>Sander Jochems</vendor>
   <url>https://www.sanderjochems.com/</url>
+  <support_url>https://github.com/Sander0542/Cloudflare-DNS-Sync</support_url>
+  <help_url>https://github.com/Sander0542/Cloudflare-DNS-Sync/wiki</help_url>
   <plesk_min_version>17</plesk_min_version>
-  <support_url>https://www.sanderjochems.com/contact</support_url>
 </module>
