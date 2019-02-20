@@ -21,8 +21,8 @@ $messages = [
     'table.cloudflareZoneID' => 'Cloudflare Zone ID',
 
     'table.host' => 'Cloudflare Zone ID',
-    'table.recordType' => 'Cloudflare Zone ID',
-    'table.status' => 'Cloudflare Zone ID',
+    'table.recordType' => 'Record Type',
+    'table.status' => 'Status',
     'table.cloudflareValue' => 'Cloudflare Value',
     'table.pleskValue' => 'Plesk Value',
 
