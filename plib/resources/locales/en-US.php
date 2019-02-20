@@ -45,4 +45,9 @@ $messages = [
     'message.noRecordsEdited' => 'No records created of updated.',
     'message.xRecordsCreated' => '%%count%% record(s) created.',
     'message.xRecordsUpdated' => '%%count%% record(s) updated.',
+
+    'permission.cloudflare.title' => 'Cloudflare DNS Sync',
+    'permission.cloudflare.description' => 'Allow customers to use Cloudflare DNS Sync',
+    'permission.cloudflareSettings.title' => 'Cloudflare DNS Sync Settings',
+    'permission.cloudflareSettings.description' => 'Allow customers to change the settings of Cloudflare DNS Sync',
 ];
