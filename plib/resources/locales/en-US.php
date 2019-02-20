@@ -33,6 +33,7 @@ $messages = [
     'button.syncDNS' => 'Sync DNS',
 
     'text.zoneIdNotFound' => 'Zone ID not found',
+    'text.recordNotFound' => 'Record not found',
 
     'message.apiSaved' => 'API Settings were successfully saved.',
     'message.settingsSaved' => 'Domain Settings were successfully saved.',

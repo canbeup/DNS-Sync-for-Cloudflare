@@ -33,6 +33,7 @@ $messages = [
     'button.syncDNS' => 'Synchroniseer DNS',
 
     'text.zoneIdNotFound' => 'Zone ID niet gevonden',
+    'text.recordNotFound' => 'Record niet gevonden',
 
     'message.apiSaved' => 'API-instellingen zijn succesvol opgeslagen.',
     'message.settingsSaved' => 'Domeininstellingen zijn succesvol opgeslagen.',

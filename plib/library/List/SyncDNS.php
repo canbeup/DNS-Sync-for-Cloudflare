@@ -18,7 +18,7 @@ class Modules_CloudflareDnsSync_List_SyncDNS extends Modules_CloudflareDnsSync_U
 
         $cloudflareRecord = $this->getCloudflareRecord($pleskRecord);
 
-        $cloudflareValue = 'Record not found';
+        $cloudflareValue = pm_Locale::lsmg('text.recordNotFound');
         $pleskValue = $pleskRecord->value;
         $syncStatus = pm_Context::getBaseUrl() . 'images/error.png';
 
@@ -61,7 +61,7 @@ class Modules_CloudflareDnsSync_List_SyncDNS extends Modules_CloudflareDnsSync_U
           'col-host' => $this->removeDotAfterTLD($cloudflareRecord->name),
           'col-type' => $cloudflareRecord->type.($cloudflareRecord->type == 'MX' ? ' ('.$cloudflareRecord->priority.')' : ''),
           'col-status' => '<img src="' . pm_Context::getBaseUrl() . 'images/error2.png"/>',
-          'col-plesk' => 'Record not found',
+          'col-plesk' => pm_Locale::lsmg('text.recordNotFound'),
           'col-cloudflare' => $this->minifyValue($cloudflareRecord->content)
       );
     }
