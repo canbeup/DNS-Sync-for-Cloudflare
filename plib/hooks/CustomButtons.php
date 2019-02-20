@@ -38,7 +38,9 @@ class Modules_CloudflareDnsSync_CustomButtons extends pm_Hook_CustomButtons
 
     foreach (pm_Session::getCurrentDomains(true) as $domain) {
       if ($domain->getId() == $options['site_id']) {
-        return true;
+        if (pm_Session::getClient()->hasPermission('manage_cloudflare', $domain)) {
+          return true;
+        }
       }
     }
   }
