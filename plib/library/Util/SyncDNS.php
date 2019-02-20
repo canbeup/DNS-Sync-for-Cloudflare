@@ -112,16 +112,16 @@ class Modules_CloudflareDnsSync_Util_SyncDNS extends Modules_CloudflareDnsSync_U
    */
   private function addMessage(pm_View_Status $view_Status, $recordsCreated, $recordsUpdated) {
     if ($recordsUpdated == 0 && $recordsCreated == 0) {
-      $view_Status->addMessage('warning', 'No records created of updated.');
+      $view_Status->addMessage('warning', pm_Locale::lmsg('message.noRecordsEdited'));
       return;
     }
 
     if ($recordsCreated > 0) {
-      $view_Status->addMessage('info', $recordsCreated.' record'.($recordsCreated == 1 ? '' : 's').' created.');
+      $view_Status->addMessage('info', pm_Locale::lmsg('message.xRecordsCreated', ['count' => $recordsCreated]));
     }
 
     if ($recordsUpdated > 0) {
-      $view_Status->addMessage('info', $recordsUpdated.' record'.($recordsUpdated == 1 ? '' : 's').' updated.');
+      $view_Status->addMessage('info', pm_Locale::lmsg('message.xRecordsUpdated', ['count' => $recordsCreated]));
     }
   }
 }
