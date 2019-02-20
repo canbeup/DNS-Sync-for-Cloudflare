@@ -41,4 +41,7 @@ $messages = [
     'message.noCloudflareZoneFound' => 'Kan geen Cloudflare-zone voor dit domein vinden.',
     'message.noAccessToDomain' => 'U hebt geen toegang tot dit domein.',
     'message.noDomainSelected' => 'Er was geen domein geselecteerd.',
+    'message.noRecordsEdited' => 'Geen records gemaakt of geupdate.',
+    'message.xRecordsCreated' => '%%count%% record(s) gemaakt.',
+    'message.xRecordsUpdated' => '%%count%% record(s) geupdate.',
 ];
