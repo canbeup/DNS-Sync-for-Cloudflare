@@ -8,29 +8,29 @@ class Modules_CloudflareDnsSync_Navigation extends pm_Hook_Navigation
         [
             'controller' => 'index',
             'action' => 'index',
-            'label' => 'Cloudflare DNS Sync',
+            'label' => pm_Locale::lmsg('title'),
             'pages' => [
                 [
                     'controller' => 'index',
                     'action' => 'domains',
-                    'label' => 'Domains',
+                    'label' => pm_Locale::lmsg('tab.domains'),
                     'pages' => [
                         [
                             'controller' => 'sync',
                             'action' => 'domain',
-                            'label' => 'DNS'
+                            'label' => pm_Locale::lmsg('tab.dns')
                         ],
                         [
                             'controller' => 'sync',
                             'action' => 'settings',
-                            'label' => 'Settings'
+                            'label' => pm_Locale::lmsg('tab.settings')
                         ]
                     ]
                 ],
               [
                   'controller' => 'index',
                   'action' => 'api',
-                  'label' => 'API'
+                  'label' => pm_Locale::lmsg('tab.api')
               ]
             ]
         ]
