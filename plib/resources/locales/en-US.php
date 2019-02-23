@@ -42,6 +42,7 @@ $messages = [
     'message.noCloudflareZoneFound' => 'Could not find a Cloudflare zone for this domain.',
     'message.noAccessToDomain' => 'You do not have access to this domain.',
     'message.noAccessExtension' => 'You do not have access to Cloudflare DNS Sync.',
+    'message.noAccessSettings' => 'You do not have access to the domain settings.',
     'message.noDomainSelected' => 'There was no domain selected.',
     'message.noRecordsEdited' => 'No records created of updated.',
     'message.xRecordsCreated' => '%%count%% record(s) created.',
