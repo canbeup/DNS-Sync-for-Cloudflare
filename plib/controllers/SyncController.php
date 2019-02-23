@@ -20,19 +20,21 @@ class SyncController extends pm_Controller_Action
 
       $siteID = $this->getRequest()->getParam("site_id");
 
-      // Init tabs for all actions
-      $this->view->tabs = array(
-          array(
-              'title' => pm_Locale::lmsg('tab.dns'),
-              'action' => 'domain',
-              'link' => 'domain?site_id='.$siteID,
-          ),
-          array(
-              'title' => pm_Locale::lmsg('tab.settings'),
-              'action' => 'settings',
-              'link' => 'settings?site_id='.$siteID,
-          )
-      );
+      if (pm_Session::getClient()->hasPermission('manage_cloudflare_settings')) {
+        // Init tabs for all actions
+        $this->view->tabs = array(
+            array(
+                'title' => pm_Locale::lmsg('tab.dns'),
+                'action' => 'domain',
+                'link' => 'domain?site_id=' . $siteID,
+            ),
+            array(
+                'title' => pm_Locale::lmsg('tab.settings'),
+                'action' => 'settings',
+                'link' => 'settings?site_id=' . $siteID,
+            )
+        );
+      }
 
     }
 
@@ -49,134 +51,147 @@ class SyncController extends pm_Controller_Action
 
   public function domainAction()
   {
-    if ($this->getRequest()->getParam("site_id") != null) {
+    if (pm_Session::getClient()->hasPermission('manage_cloudflare')) {
+      if (pm_Session::getClient()->hasPermission('manage_cloudflare_settings')) {
+        if ($this->getRequest()->getParam("site_id") != null) {
 
-      $siteID = $this->getRequest()->getParam("site_id");
+          $siteID = $this->getRequest()->getParam("site_id");
 
-      if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
+          if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
 
-        $this->view->tabs[0]['active'] = true;
+            $this->view->tabs[0]['active'] = true;
 
-        try {
+            try {
 
-          $zone = $this->cloudflare->getZone($siteID);
+              $zone = $this->cloudflare->getZone($siteID);
 
-          if ($zone !== false) {
+              if ($zone !== false) {
 
-            $this->view->pageTitle = pm_Locale::lmsg('title.cloudflareSyncFor', ['domain' => $zone->name]);
+                $this->view->pageTitle = pm_Locale::lmsg('title.cloudflareSyncFor', ['domain' => $zone->name]);
 
-            $this->view->syncTools = [
-                [
-                    'title' => pm_Locale::lmsg('button.syncDNS'),
-                    'description' => pm_Locale::lmsg('description'),
-                    'class' => 'sb-button1',
-                    'action' => 'domain?site_id=' . $siteID.'&sync=all',
-                ]
-            ];
+                $this->view->syncTools = [
+                    [
+                        'title' => pm_Locale::lmsg('button.syncDNS'),
+                        'description' => pm_Locale::lmsg('description'),
+                        'class' => 'sb-button1',
+                        'action' => 'domain?site_id=' . $siteID . '&sync=all',
+                    ]
+                ];
 
-            //Check if we need to sync
-            if ($this->getRequest()->getParam('sync') != null) {
-              try {
-                //Create the Sync Util
-                $dnsSyncUtil = new Modules_CloudflareDnsSync_Util_SyncDNS($siteID, $this->cloudflare, new Modules_CloudflareDnsSync_PleskDNS());
+                //Check if we need to sync
+                if ($this->getRequest()->getParam('sync') != null) {
+                  try {
+                    //Create the Sync Util
+                    $dnsSyncUtil = new Modules_CloudflareDnsSync_Util_SyncDNS($siteID, $this->cloudflare, new Modules_CloudflareDnsSync_PleskDNS());
 
-                //Check if the sync method is all
-                if ($this->getRequest()->getParam('sync') == 'all') {
-                  //Sync the Plesk DNS to Cloudflare
-                  $dnsSyncUtil->syncAll($this->_status);
-                  //Check if the sync method is a single record
-                } elseif (is_numeric($this->getRequest()->getParam('sync'))) {
-                  //Get the record ID
-                  $recordID = $this->getRequest()->getParam('sync');
+                    //Check if the sync method is all
+                    if ($this->getRequest()->getParam('sync') == 'all') {
+                      //Sync the Plesk DNS to Cloudflare
+                      $dnsSyncUtil->syncAll($this->_status);
+                      //Check if the sync method is a single record
+                    } elseif (is_numeric($this->getRequest()->getParam('sync'))) {
+                      //Get the record ID
+                      $recordID = $this->getRequest()->getParam('sync');
 
-                  //Sync the Plesk Record to Cloudflare
-                  $dnsSyncUtil->syncRecord($this->_status, $recordID);
+                      //Sync the Plesk Record to Cloudflare
+                      $dnsSyncUtil->syncRecord($this->_status, $recordID);
+                    }
+                  } catch (ClientException $exception) {
+                    $this->_status->addMessage('error', pm_Locale::lmsg('message.couldNotSync'));
+                  }
                 }
-              } catch (ClientException $exception) {
-                $this->_status->addMessage('error', pm_Locale::lmsg('message.couldNotSync'));
+
+                $this->view->list = $this->_getRecordsList($siteID);
+
+              } else {
+                $this->_status->addMessage('error', pm_Locale::lmsg('message.noCloudflareZoneFound'));
               }
+            } catch (ClientException $exception) {
+              $this->_status->addMessage('error', pm_Locale::lmsg('message.noCloudflareZoneFound'));
             }
-
-            $this->view->list = $this->_getRecordsList($siteID);
-
           } else {
-            $this->_status->addMessage('error', pm_Locale::lmsg('message.noCloudflareZoneFound'));
+            $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessToDomain'));
           }
-        } catch (ClientException $exception) {
-          $this->_status->addMessage('error', pm_Locale::lmsg('message.noCloudflareZoneFound'));
+        } else {
+          $this->_status->addMessage('error', pm_Locale::lmsg('message.noDomainSelected'));
         }
       } else {
-        $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessToDomain'));
+        $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessSettings'));
       }
     } else {
-      $this->_status->addMessage('error', pm_Locale::lmsg('message.noDomainSelected'));
+      $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessExtension'));
     }
   }
 
   public function settingsAction()
   {
-    if ($this->getRequest()->getParam("site_id") != null) {
+    if (pm_Session::getClient()->hasPermission('manage_cloudflare')) {
+      if ($this->getRequest()->getParam("site_id") != null) {
 
-      $siteID = $this->getRequest()->getParam("site_id");
+        $siteID = $this->getRequest()->getParam("site_id");
 
-      if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
+        if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
 
-        try {
-          $this->view->pageTitle = pm_Locale::lmsg('title.cloudflareSyncFor', ['domain' => pm_Domain::getByDomainId($siteID)->getName()]);
-        } catch (pm_Exception $e) {
-        }
-
-        $this->view->tabs[1]['active'] = true;
-
-        //List the Type of available records
-        $recordOptions = Modules_CloudflareDnsSync_Helper_Records::getAvailableRecords();
-
-        $selectedRecords = array();
-
-        foreach ($recordOptions as $option) {
-          if (Modules_CloudflareDnsSync_Helper_DomainSettings::syncRecordType($option, $siteID)) {
-            array_push($selectedRecords, $option);
+          try {
+            $this->view->pageTitle = pm_Locale::lmsg('title.cloudflareSyncFor', ['domain' => pm_Domain::getByDomainId($siteID)->getName()]);
+          } catch (pm_Exception $e) {
           }
-        }
 
-        //Create a new Form
-        $form = new pm_Form_Simple();
-        $form->addElement('checkbox', Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_PROXY, array(
-            'label' => pm_Locale::lmsg('form.trafficThruCloudflare'),
-            'value' => Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($siteID),
-        ));
-        $form->addElement('multiCheckbox', Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_SYNC_TYPES, array(
-            'label' => pm_Locale::lmsg('form.selectRecord'),
-            'multiOptions' => $recordOptions,
-            'value' => $selectedRecords
-        ));
+          $this->view->tabs[1]['active'] = true;
 
-        $form->addControlButtons(array(
-            'sendTitle' => 'Save',
-            'cancelLink' => pm_Context::getActionUrl('sync', 'settings?site_id=' . $siteID),
-        ));
+          //List the Type of available records
+          $recordOptions = Modules_CloudflareDnsSync_Helper_Records::getAvailableRecords();
 
-        if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
-          pm_Settings::set(Modules_CloudflareDnsSync_Util_Settings::getDomainKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_PROXY, $siteID), $form->getValue(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_PROXY));
+          $selectedRecords = array();
 
           foreach ($recordOptions as $option) {
-            try {
-              pm_Settings::set(Modules_CloudflareDnsSync_Util_Settings::getDomainKey('record' . $option, $siteID), in_array($option, $form->getValue(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_SYNC_TYPES)));
-            } catch (Exception $e) {
+            if (Modules_CloudflareDnsSync_Helper_DomainSettings::syncRecordType($option, $siteID)) {
+              array_push($selectedRecords, $option);
             }
           }
 
-          $this->_status->addMessage('info', pm_Locale::lmsg('message.settingsSaved'));
-          $this->_helper->json(array('redirect' => pm_Context::getActionUrl('sync', 'domain?site_id=' . $siteID)));
+          //Create a new Form
+          $form = new pm_Form_Simple();
+          $form->addElement('checkbox', Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_PROXY, array(
+              'label' => pm_Locale::lmsg('form.trafficThruCloudflare'),
+              'value' => Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($siteID),
+          ));
+          $form->addElement('multiCheckbox', Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_SYNC_TYPES, array(
+              'label' => pm_Locale::lmsg('form.selectRecord'),
+              'multiOptions' => $recordOptions,
+              'value' => $selectedRecords
+          ));
+
+          $form->addControlButtons(array(
+              'sendTitle' => 'Save',
+              'cancelLink' => pm_Context::getActionUrl('sync', 'settings?site_id=' . $siteID),
+          ));
+
+          if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
+            pm_Settings::set(Modules_CloudflareDnsSync_Util_Settings::getDomainKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_PROXY, $siteID), $form->getValue(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_PROXY));
+
+            foreach ($recordOptions as $option) {
+              try {
+                pm_Settings::set(Modules_CloudflareDnsSync_Util_Settings::getDomainKey('record' . $option, $siteID), in_array($option, $form->getValue(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_SYNC_TYPES)));
+              } catch (Exception $e) {
+              }
+            }
+
+            $this->_status->addMessage('info', pm_Locale::lmsg('message.settingsSaved'));
+            $this->_helper->json(array('redirect' => pm_Context::getActionUrl('sync', 'domain?site_id=' . $siteID)));
+          }
+
+          $this->view->form = $form;
+
+        } else {
+          $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessToDomain'));
         }
-
-        $this->view->form = $form;
-
       } else {
-        $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessToDomain'));
+        $this->_status->addMessage('error', pm_Locale::lmsg('message.noDomainSelected'));
       }
     } else {
-      $this->_status->addMessage('error', pm_Locale::lmsg('message.noDomainSelected'));
+      $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessExtension'));
+      $this->view->tabs = null;
     }
   }
 
