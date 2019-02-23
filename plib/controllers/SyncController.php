@@ -69,7 +69,7 @@ class SyncController extends pm_Controller_Action
 
               if ($zone !== false) {
 
-                $this->view->pageTitle = pm_Locale::lmsg('title.cloudflareSyncFor', ['domain' => $zone->name]);
+                $this->view->pageTitle = pm_Locale::lmsg('title.dnsSyncFor', ['domain' => $zone->name]);
 
                 $this->view->syncTools = [
                     [
@@ -136,7 +136,7 @@ class SyncController extends pm_Controller_Action
         if (pm_Session::getClient()->hasPermission('manage_cloudflare', pm_Domain::getByDomainId($siteID))) {
 
           try {
-            $this->view->pageTitle = pm_Locale::lmsg('title.cloudflareSyncFor', ['domain' => pm_Domain::getByDomainId($siteID)->getName()]);
+            $this->view->pageTitle = pm_Locale::lmsg('title.dnsSyncFor', ['domain' => pm_Domain::getByDomainId($siteID)->getName()]);
           } catch (pm_Exception $e) {
           }
 

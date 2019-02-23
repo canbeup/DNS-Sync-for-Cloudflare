@@ -5,10 +5,10 @@
  */
 
 $messages = [
-    'title' => 'Cloudflare DNS Sync',
+    'title' => 'DNS Sync for Cloudflare',
     'description' => 'Sync the Plesk DNS to Cloudflare DNS',
 
-    'title.cloudflareSyncFor' => 'Cloudflare DNS Sync for <b>%%domain%%</b>',
+    'title.dnsSyncFor' => 'DNS Sync for <b>%%domain%%</b>',
 
     'tab.domains' => 'Domains',
     'tab.api' => 'API',
@@ -41,15 +41,15 @@ $messages = [
     'message.couldNotSync' => 'Could not sync the Plesk DNS zone to Cloudflare.',
     'message.noCloudflareZoneFound' => 'Could not find a Cloudflare zone for this domain.',
     'message.noAccessToDomain' => 'You do not have access to this domain.',
-    'message.noAccessExtension' => 'You do not have access to Cloudflare DNS Sync.',
+    'message.noAccessExtension' => 'You do not have access to DNS Sync for Cloudflare.',
     'message.noAccessSettings' => 'You do not have access to the domain settings.',
     'message.noDomainSelected' => 'There was no domain selected.',
     'message.noRecordsEdited' => 'No records created of updated.',
     'message.xRecordsCreated' => '%%count%% record(s) created.',
     'message.xRecordsUpdated' => '%%count%% record(s) updated.',
 
-    'permission.cloudflare.title' => 'Cloudflare DNS Sync',
-    'permission.cloudflare.description' => 'Allow customers to use Cloudflare DNS Sync',
-    'permission.cloudflareSettings.title' => 'Cloudflare DNS Sync Settings',
-    'permission.cloudflareSettings.description' => 'Allow customers to change the settings of Cloudflare DNS Sync',
+    'permission.cloudflare.title' => 'DNS Sync for Cloudflare',
+    'permission.cloudflare.description' => 'Allow customers to use DNS Sync for Cloudflare',
+    'permission.cloudflareSettings.title' => 'DNS Sync for Cloudflare Settings',
+    'permission.cloudflareSettings.description' => 'Allow customers to change the settings of DNS Sync for Cloudflare',
 ];

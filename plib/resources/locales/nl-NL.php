@@ -5,10 +5,10 @@
  */
 
 $messages = [
-    'title' => 'Cloudflare DNS Sync',
+    'title' => 'DNS Sync voor Cloudflare',
     'description' => 'Synchroniseer de DNS van Plesk met Cloudflare DNS',
 
-    'title.cloudflareSyncFor' => 'Cloudflare DNS Sync voor <b>%%domain%%</b>',
+    'title.dnsSyncFor' => 'DNS Sync voor <b>%%domain%%</b>',
 
     'tab.domains' => 'Domeinen',
     'tab.api' => 'API',
@@ -39,9 +39,9 @@ $messages = [
     'message.settingsSaved' => 'Domeininstellingen zijn succesvol opgeslagen.',
     'message.noConnection' => 'Kon niet verbinden met Cloudflare.',
     'message.couldNotSync' => 'De Plesk DNS-zone kon niet worden gesynchroniseerd met Cloudflare.',
-    'message.noCloudflareZoneFound' => 'Kan geen Cloudflare-zone voor dit domein vinden.',
+    'message.noCloudflareZoneFound' => 'Kan geen Cloudflare zone voor dit domein gevonden worden.',
     'message.noAccessToDomain' => 'U heeft geen toegang tot dit domein.',
-    'message.noAccessExtension' => 'U heeft geen toegang tot Cloudflare DNS Sync.',
+    'message.noAccessExtension' => 'U heeft geen toegang tot DNS Sync voor Cloudflare.',
     'message.noAccessSettings' => 'U heeft geen toegang tot de domein instellingen.',
     'message.noDomainSelected' => 'Er was geen domein geselecteerd.',
     'message.noRecordsEdited' => 'Geen records gemaakt of geupdate.',
