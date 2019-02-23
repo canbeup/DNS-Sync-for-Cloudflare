@@ -14,7 +14,7 @@ class SyncController extends pm_Controller_Action
     parent::init();
 
     // Init title for all actions
-    $this->view->pageTitle = 'Cloudflare DNS Sync';
+    $this->view->pageTitle = pm_Locale::lmsg('title');
 
     if ($this->getRequest()->getParam("site_id") != null) {
 
