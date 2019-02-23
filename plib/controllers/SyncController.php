@@ -20,7 +20,7 @@ class SyncController extends pm_Controller_Action
 
       $siteID = $this->getRequest()->getParam("site_id");
 
-      if (pm_Session::getClient()->hasPermission('manage_cloudflare_settings')) {
+      if (pm_Session::getClient()->hasPermission('manage_cloudflare_settings', pm_Domain::getByDomainId($siteID))) {
         // Init tabs for all actions
         $this->view->tabs = array(
             array(
