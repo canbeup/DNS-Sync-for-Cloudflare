@@ -51,13 +51,15 @@ class SyncController extends pm_Controller_Action
 
   public function domainAction()
   {
-    if (pm_Session::getClient()->hasPermission('manage_cloudflare')) {
-      if (pm_Session::getClient()->hasPermission('manage_cloudflare_settings')) {
-        if ($this->getRequest()->getParam("site_id") != null) {
+    if ($this->getRequest()->getParam("site_id") != null) {
 
-          $siteID = $this->getRequest()->getParam("site_id");
+      $siteID = $this->getRequest()->getParam("site_id");
 
-          if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
+      if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
+
+        if (pm_Session::getClient()->hasPermission('manage_cloudflare', pm_Domain::getByDomainId($siteID))) {
+
+          if (pm_Session::getClient()->hasPermission('manage_cloudflare_settings', pm_Domain::getByDomainId($siteID))) {
 
             $this->view->tabs[0]['active'] = true;
 
@@ -110,27 +112,28 @@ class SyncController extends pm_Controller_Action
               $this->_status->addMessage('error', pm_Locale::lmsg('message.noCloudflareZoneFound'));
             }
           } else {
-            $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessToDomain'));
+            $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessSettings'));
           }
         } else {
-          $this->_status->addMessage('error', pm_Locale::lmsg('message.noDomainSelected'));
+          $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessExtension'));
         }
       } else {
-        $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessSettings'));
+        $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessToDomain'));
       }
     } else {
-      $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessExtension'));
+      $this->_status->addMessage('error', pm_Locale::lmsg('message.noDomainSelected'));
     }
   }
 
   public function settingsAction()
   {
-    if (pm_Session::getClient()->hasPermission('manage_cloudflare')) {
-      if ($this->getRequest()->getParam("site_id") != null) {
+    if ($this->getRequest()->getParam("site_id") != null) {
 
-        $siteID = $this->getRequest()->getParam("site_id");
+      $siteID = $this->getRequest()->getParam("site_id");
 
-        if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
+      if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
+
+        if (pm_Session::getClient()->hasPermission('manage_cloudflare', pm_Domain::getByDomainId($siteID))) {
 
           try {
             $this->view->pageTitle = pm_Locale::lmsg('title.cloudflareSyncFor', ['domain' => pm_Domain::getByDomainId($siteID)->getName()]);
@@ -184,14 +187,14 @@ class SyncController extends pm_Controller_Action
           $this->view->form = $form;
 
         } else {
-          $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessToDomain'));
+          $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessExtension'));
+          $this->view->tabs = null;
         }
       } else {
-        $this->_status->addMessage('error', pm_Locale::lmsg('message.noDomainSelected'));
+        $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessToDomain'));
       }
     } else {
-      $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessExtension'));
-      $this->view->tabs = null;
+      $this->_status->addMessage('error', pm_Locale::lmsg('message.noDomainSelected'));
     }
   }
 
