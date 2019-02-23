@@ -41,6 +41,7 @@ $messages = [
     'message.couldNotSync' => 'Could not sync the Plesk DNS zone to Cloudflare.',
     'message.noCloudflareZoneFound' => 'Could not find a Cloudflare zone for this domain.',
     'message.noAccessToDomain' => 'You do not have access to this domain.',
+    'message.noAccessExtension' => 'You do not have access to Cloudflare DNS Sync.',
     'message.noDomainSelected' => 'There was no domain selected.',
     'message.noRecordsEdited' => 'No records created of updated.',
     'message.xRecordsCreated' => '%%count%% record(s) created.',
