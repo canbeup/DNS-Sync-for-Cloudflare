@@ -47,63 +47,53 @@ class IndexController extends pm_Controller_Action
 
   public function domainsAction()
   {
-    if (pm_Session::getClient()->hasPermission('manage_cloudflare')) {
-      if ($this->cloudflare !== false) {
-        try {
-          $list = $this->_getDomainList();
+    if ($this->cloudflare !== false) {
+      try {
+        $list = $this->_getDomainList();
 
-          $this->view->list = $list;
-        } catch (GuzzleHttp\Exception\ClientException $exception) {
-          $this->view->error = pm_Locale::lmsg('message.noConnection');
-        }
-      } else {
-        $this->forward('api');
+        $this->view->list = $list;
+      } catch (GuzzleHttp\Exception\ClientException $exception) {
+        $this->view->error = pm_Locale::lmsg('message.noConnection');
       }
     } else {
-      $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessExtension'));
-      $this->view->tabs = null;
+      $this->forward('api');
     }
   }
 
   public function apiAction()
   {
-    if (pm_Session::getClient()->hasPermission('manage_cloudflare')) {
-      //Create a new Form
-      $form = new pm_Form_Simple();
-      $form->addElement('Text', Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL, array(
-          'label' => pm_Locale::lmsg('form.cloudflareEmail'),
-          'value' => pm_Settings::getDecrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL)),
-          'required' => true,
-          'validator' => array(
-              array('EmailAddress', true)
-          )
-      ));
-      $form->addElement('Text', Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY, array(
-          'label' => pm_Locale::lmsg('form.cloudflareApiKey'),
-          'value' => pm_Settings::getDecrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY)),
-          'required' => true,
-          'validator' => array(
-              array('NotEmpty', true)
-          )
-      ));
+    //Create a new Form
+    $form = new pm_Form_Simple();
+    $form->addElement('Text', Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL, array(
+        'label' => pm_Locale::lmsg('form.cloudflareEmail'),
+        'value' => pm_Settings::getDecrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL)),
+        'required' => true,
+        'validator' => array(
+            array('EmailAddress', true)
+        )
+    ));
+    $form->addElement('Text', Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY, array(
+        'label' => pm_Locale::lmsg('form.cloudflareApiKey'),
+        'value' => pm_Settings::getDecrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY)),
+        'required' => true,
+        'validator' => array(
+            array('NotEmpty', true)
+        )
+    ));
 
-      $form->addControlButtons(array(
-          'cancelLink' => pm_Context::getModulesListUrl(),
-      ));
+    $form->addControlButtons(array(
+        'cancelLink' => pm_Context::getModulesListUrl(),
+    ));
 
-      if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
-        pm_Settings::setEncrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL), $form->getValue(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL));
-        pm_Settings::setEncrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY), $form->getValue(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY));
+    if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
+      pm_Settings::setEncrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL), $form->getValue(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_EMAIL));
+      pm_Settings::setEncrypted(Modules_CloudflareDnsSync_Util_Settings::getUserKey(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY), $form->getValue(Modules_CloudflareDnsSync_Util_Settings::CLOUDFLARE_API_KEY));
 
-        $this->_status->addMessage('info', pm_Locale::lmsg('message.apiSaved'));
-        $this->_helper->json(array('redirect' => pm_Context::getBaseUrl()));
-      }
-
-      $this->view->form = $form;
-    } else {
-      $this->_status->addMessage('error', pm_Locale::lmsg('message.noAccessExtension'));
-      $this->view->tabs = null;
+      $this->_status->addMessage('info', pm_Locale::lmsg('message.apiSaved'));
+      $this->_helper->json(array('redirect' => pm_Context::getBaseUrl()));
     }
+
+    $this->view->form = $form;
   }
 
   public function domainDataAction()
