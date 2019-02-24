@@ -123,7 +123,7 @@ class IndexController extends pm_Controller_Action
         }
       }
       $data[] = array(
-          'col-domain' => '<a href="'.pm_Context::getBaseUrl().'index.php/sync/domain?site_id='.$domain->getId().'">'.$domain->getName().'</a>',
+          'col-domain' => '<a href="'.pm_Context::getActionUrl('sync', 'domain?site_id='.$domain->getId()).'">'.$domain->getName().'</a>',
           'col-zone' => $cloudflareID,
       );
     }
