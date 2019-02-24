@@ -33,7 +33,7 @@ abstract class Modules_CloudflareDnsSync_Util_BaseDNS
     //Fetch the domain from the Site ID
     $this->domainName = pm_Domain::getByDomainId($siteID)->getName();
 
-    $this->zoneID = $this->cloudflare->getZone($siteID)->id;
+    $this->zoneID = $this->cloudflare->getZone($siteID, true)->id;
 
     $this->cloudflareRecords = $this->cloudflare->getDNS()->listRecords($this->zoneID, '', '', '', 1, 250)->result;
     $this->pleskRecords = $this->pleskDNS->getRecords($this->siteID);

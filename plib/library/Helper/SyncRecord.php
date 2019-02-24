@@ -15,7 +15,7 @@ class Modules_CloudflareDnsSync_Helper_SyncRecord
     $this->type = $pleskRecord->type;
     $this->host = $pleskRecord->host;
 
-    $this->proxied = Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($pleskRecord->siteId, $pleskRecord->type);
+    $this->proxied = (bool)Modules_CloudflareDnsSync_Helper_DomainSettings::useCloudflareProxy($pleskRecord->siteId, $pleskRecord->type);
 
     $this->value = $pleskRecord->value;
     $this->priority = '';

@@ -19,6 +19,7 @@ $messages = [
     'form.cloudflareApiKey' => 'Cloudflare API Key',
 
     'form.trafficThruCloudflare' => 'Traffic Thru Cloudflare',
+    'form.automaticSync' => 'Sync DNS automatic',
     'form.selectRecord' => 'Select the type of records you want to sync',
 
     'table.domainName' => 'Domain Name',
@@ -31,6 +32,7 @@ $messages = [
     'table.pleskValue' => 'Plesk Value',
 
     'button.syncDNS' => 'Sync DNS',
+    'button.save' => 'Save',
 
     'text.zoneIdNotFound' => 'Zone ID not found',
     'text.recordNotFound' => 'Record not found',

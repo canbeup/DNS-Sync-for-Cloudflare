@@ -19,6 +19,7 @@ $messages = [
     'form.cloudflareApiKey' => 'Cloudflare API Key',
 
     'form.trafficThruCloudflare' => 'Verkeer door Cloudflare',
+    'form.automaticSync' => 'Synchroniseer DNS automatisch',
     'form.selectRecord' => 'Selecteer het type records dat u wilt synchroniseren',
 
     'table.domainName' => 'Domein Naam',
@@ -31,6 +32,7 @@ $messages = [
     'table.pleskValue' => 'Plesk Waarde',
 
     'button.syncDNS' => 'Synchroniseer DNS',
+    'button.save' => 'Opslaan',
 
     'text.zoneIdNotFound' => 'Zone ID niet gevonden',
     'text.recordNotFound' => 'Record niet gevonden',

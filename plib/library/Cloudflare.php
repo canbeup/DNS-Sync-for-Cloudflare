@@ -35,9 +35,13 @@ class Modules_CloudflareDnsSync_Cloudflare
   /**
    * @return bool|Zones
    */
-  public function getZone($siteID)
+  public function getZone($siteID, $useAll = false)
   {
-    foreach (pm_Session::getCurrentDomains(true) as $domain) {
+    $domains = pm_Session::getCurrentDomains(true);
+    if ($useAll) {
+      $domains = pm_Domain::getAllDomains(true);
+    }
+    foreach ($domains as $domain) {
       if ($domain->getId() == $siteID) {
         foreach ($this->getZones()->listZones()->result as $zone) {
           if ($zone->name == $domain->getName()) {

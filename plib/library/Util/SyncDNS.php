@@ -23,7 +23,7 @@ class Modules_CloudflareDnsSync_Util_SyncDNS extends Modules_CloudflareDnsSync_U
    *
    * @param pm_View_Status $view_Status
    */
-  public function syncAll(pm_View_Status $view_Status) {
+  public function syncAll(pm_View_Status $view_Status = null) {
     $recordsUpdated = 0;
     $recordsCreated = 0;
 
@@ -40,7 +40,9 @@ class Modules_CloudflareDnsSync_Util_SyncDNS extends Modules_CloudflareDnsSync_U
 
     }
 
-    $this->addMessage($view_Status, $recordsCreated, $recordsUpdated);
+    if ($view_Status !== null) {
+      $this->addMessage($view_Status, $recordsCreated, $recordsUpdated);
+    }
   }
 
   /**
