@@ -111,15 +111,10 @@ class IndexController extends pm_Controller_Action
 
     $data = array();
 
-    $domains = pm_Session::getCurrentDomains(true);
-    if (pm_Session::getClient()->isAdmin()) {
-      $domains = pm_Domain::getAllDomains(true);
-    }
-
     /**
      * @var $domain pm_Domain
      */
-    foreach ($domains as $domain) {
+    foreach (pm_Session::getCurrentDomains(true) as $domain) {
       $cloudflareID = pm_Locale::lmsg('text.zoneIdNotFound');
       foreach ($zones->listZones()->result as $zone) {
         if ($zone->name == $domain->getName()) {
