@@ -55,7 +55,7 @@ class SyncController extends pm_Controller_Action
 
       $siteID = $this->getRequest()->getParam("site_id");
 
-      if (pm_Session::getClient()->hasAccessToDomain($siteID) || pm_Session::getClient()->isAdmin()) {
+      if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
 
         if (pm_Session::getClient()->hasPermission('manage_cloudflare', pm_Domain::getByDomainId($siteID))) {
 
@@ -133,7 +133,7 @@ class SyncController extends pm_Controller_Action
 
       $siteID = $this->getRequest()->getParam("site_id");
 
-      if (pm_Session::getClient()->hasAccessToDomain($siteID) || pm_Session::getClient()->isAdmin()) {
+      if (pm_Session::getClient()->hasAccessToDomain($siteID)) {
 
         if (pm_Session::getClient()->hasPermission('manage_cloudflare', pm_Domain::getByDomainId($siteID))) {
 
