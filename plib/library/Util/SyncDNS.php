@@ -66,7 +66,9 @@ class Modules_CloudflareDnsSync_Util_SyncDNS extends Modules_CloudflareDnsSync_U
 
     }
 
-    $this->addMessage($view_Status, $recordsCreated, $recordsUpdated);
+    if ($view_Status !== null) {
+      $this->addMessage($view_Status, $recordsCreated, $recordsUpdated);
+    }
   }
 
   /**
@@ -119,11 +121,11 @@ class Modules_CloudflareDnsSync_Util_SyncDNS extends Modules_CloudflareDnsSync_U
     }
 
     if ($recordsCreated > 0) {
-      $view_Status->addMessage('info', pm_Locale::lmsg('message.xRecordsCreated', ['count' => $recordsCreated]));
+      $view_Status->addMessage('info', pm_Locale::lmsg('message.xRecordsCreated', ['count' => $recordsCreated.'']));
     }
 
     if ($recordsUpdated > 0) {
-      $view_Status->addMessage('info', pm_Locale::lmsg('message.xRecordsUpdated', ['count' => $recordsCreated]));
+      $view_Status->addMessage('info', pm_Locale::lmsg('message.xRecordsUpdated', ['count' => $recordsCreated.'']));
     }
   }
 }
