@@ -219,7 +219,7 @@ class SyncController extends pm_Controller_Action
 
   private function _getRecordsList($siteID)
   {
-    $data = (new Modules_CloudflareDnsSync_List_SyncDNS($siteID, $this->cloudflare, new Modules_CloudflareDnsSync_PleskDNS()))->getList();
+    $data = (new Modules_CloudflareDnsSync_List_DNS($siteID, $this->cloudflare, new Modules_CloudflareDnsSync_PleskDNS()))->getList();
 
     $list = new pm_View_List_Simple($this->view, $this->_request);
     $list->setData($data);

@@ -1,6 +1,6 @@
 <?php
 
-class Modules_CloudflareDnsSync_List_SyncDNS extends Modules_CloudflareDnsSync_Util_BaseDNS
+class Modules_CloudflareDnsSync_List_DNS extends Modules_CloudflareDnsSync_Util_BaseDNS
 {
   public function __construct($siteID, Modules_CloudflareDnsSync_Cloudflare $cloudflare, Modules_CloudflareDnsSync_PleskDNS $pleskDNS)
   {
