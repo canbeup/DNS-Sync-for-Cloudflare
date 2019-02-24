@@ -31,7 +31,7 @@ class Modules_CloudflareDnsSync_EventListener implements EventListener
               //Try to Sync the DNS
               if ($cloudflare !== false) {
                 //Sync the DNS Zone
-                $syncDNS = new Modules_CloudflareDnsSync_Util_DNS($domain->getId(), $cloudflare, new Modules_CloudflareDnsSync_PleskDNS());
+                $syncDNS = new Modules_CloudflareDnsSync_Util_SyncDNS($domain->getId(), $cloudflare, new Modules_CloudflareDnsSync_PleskDNS());
                 $syncDNS->syncAll();
               }
             }
