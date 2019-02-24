@@ -86,7 +86,7 @@ class SyncController extends pm_Controller_Action
                 if ($this->getRequest()->getParam('sync') != null) {
                   try {
                     //Create the Sync Util
-                    $dnsSyncUtil = new Modules_CloudflareDnsSync_Util_SyncDNS($siteID, $this->cloudflare, new Modules_CloudflareDnsSync_PleskDNS());
+                    $dnsSyncUtil = new Modules_CloudflareDnsSync_Util_DNS($siteID, $this->cloudflare, new Modules_CloudflareDnsSync_PleskDNS());
 
                     //Check if the sync method is all
                     if ($this->getRequest()->getParam('sync') == 'all') {

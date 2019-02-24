@@ -3,7 +3,7 @@
 use Cloudflare\API\Endpoints\DNS;
 use PleskX\Api\Struct\Dns\Info;
 
-class Modules_CloudflareDnsSync_Util_SyncDNS extends Modules_CloudflareDnsSync_Util_BaseDNS
+class Modules_CloudflareDnsSync_Util_DNS extends Modules_CloudflareDnsSync_Util_BaseDNS
 {
   /**
    * DNSSyncUtil constructor.
