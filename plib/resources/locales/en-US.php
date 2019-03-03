@@ -5,7 +5,7 @@
  */
 
 $messages = [
-    'title' => 'DNS Sync for Cloudflare',
+    'title' => 'DNS Sync for Cloudflare®',
     'description' => 'Sync the Plesk DNS to Cloudflare DNS',
 
     'title.dnsSyncFor' => 'DNS Sync for <b>%%domain%%</b>',
